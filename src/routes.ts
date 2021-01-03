@@ -1,3 +1,3 @@
 export const routes = {
-    privateRoutes: [ '/dashboard' ]
+    privateRoutes: [ '/dashboard', '/channels' ]
 }
