@@ -25,3 +25,5 @@
     - NGINX
     - DigitalOcean
     - Vercel
+
+- [Deployed](prod.heathens.tk)
