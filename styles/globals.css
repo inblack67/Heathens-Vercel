@@ -1,0 +1,34 @@
+#preloader{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    width: 100%;
+}
+
+/* *::-webkit-scrollbar,         
+*::-webkit-scrollbar-button,  
+*::-webkit-scrollbar-track,     
+*::-webkit-scrollbar-track-piece,
+*::-webkit-scrollbar-thumb,      
+*::-webkit-scrollbar-corner,     
+*::-webkit-resizer{
+    background: red;
+} */
+
+*::-webkit-scrollbar{
+    background: #161710;
+}
+
+*::-webkit-scrollbar-thumb{
+    border-radius: 5rem;
+    background-color: red;
+}
+
+body::-webkit-scrollbar{
+    background-color: #161710 !important;
+}
+
+body::-webkit-scrollbar-thumb{
+    background-color: #161710 !important;
+}

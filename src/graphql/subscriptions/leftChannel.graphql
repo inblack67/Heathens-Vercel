@@ -1,0 +1,6 @@
+subscription LeftChannel($channelId: Float!){
+  leftChannel(channelId: $channelId){
+    username
+    id
+  }
+}

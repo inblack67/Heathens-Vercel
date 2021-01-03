@@ -1,0 +1,11 @@
+query GetChannelMessages($channelId: Float!){
+  getChannelMessages(channelId: $channelId){
+    content
+    id
+    poster{
+      username
+      id
+    }
+    createdAt
+  }
+}

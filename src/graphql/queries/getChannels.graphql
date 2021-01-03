@@ -1,0 +1,7 @@
+query GetChannels{
+  getChannels{
+    name
+    id
+    desc
+  }
+}

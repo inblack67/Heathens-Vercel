@@ -1,0 +1,7 @@
+query GetChannelUsers($channelId: Float!)
+{
+  getChannelUsers(channelId: $channelId){
+    username
+    id
+  }
+}

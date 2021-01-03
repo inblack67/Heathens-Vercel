@@ -1,0 +1,6 @@
+subscription JoinedChannel($channelId: Float!){
+  joinedChannel(channelId: $channelId){
+    username
+    id
+  }
+}

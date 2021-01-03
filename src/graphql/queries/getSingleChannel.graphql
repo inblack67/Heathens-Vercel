@@ -1,0 +1,18 @@
+query GetSingleChannel($id: Float!){
+  getSingleChannel(id: $id){
+    name
+    desc
+    users{
+      username
+      id
+    }
+    messages{
+      poster{
+        username
+        id 
+      }
+      content
+      id
+    }
+  }
+}

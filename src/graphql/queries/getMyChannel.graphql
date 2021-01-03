@@ -1,0 +1,11 @@
+query GetMyChannel{
+  getMyChannel{
+    id
+    desc
+    name
+    users{
+        id
+        username
+    }
+  }
+}

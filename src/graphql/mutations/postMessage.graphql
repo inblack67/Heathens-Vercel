@@ -1,0 +1,5 @@
+mutation PostMessage($channelId: Float!, $content: String!){
+  postMessage(channelId: $channelId, content: $content){
+    content
+  }
+}

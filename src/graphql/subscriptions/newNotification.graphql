@@ -1,0 +1,3 @@
+subscription NewNotification($channelId: Float!){
+  newNotification(channelId: $channelId)
+}
