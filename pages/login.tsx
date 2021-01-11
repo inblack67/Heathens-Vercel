@@ -38,12 +38,7 @@ const CLogin = () =>
     const router = useRouter();
     const classes = useStyles();
 
-    const { register, handleSubmit, errors } = useForm<ILogin>( {
-        defaultValues: {
-            username: 'inblack67',
-            password: '12345678',
-        }
-    } );
+    const { register, handleSubmit, errors } = useForm<ILogin>();
 
     const [ loginMutation, { loading, error, data } ] = useLoginMutation();
 

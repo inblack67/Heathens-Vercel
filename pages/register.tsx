@@ -38,14 +38,7 @@ const CRegister = () =>
     const router = useRouter();
     const classes = useStyles();
 
-    const { register, handleSubmit, errors } = useForm<IRegister>( {
-        defaultValues: {
-            name: 'Aman',
-            username: 'inblack67',
-            password: 'Aman123@',
-            email: 'aman@gmail.com'
-        }
-    } );
+    const { register, handleSubmit, errors } = useForm<IRegister>();
 
     const [ registerMutation, { loading, error, data } ] = useRegisterMutation();
 
