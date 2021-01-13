@@ -8,47 +8,47 @@ import { onError } from '@apollo/client/link/error';
 import { split } from '@apollo/client';
 import { getMainDefinition } from '@apollo/client/utilities';
 
-const createAuthenticatedLink = () =>
-{
-    console.log( 'creating auth link' );
-    // server
-    if ( typeof window === 'undefined' )
-    {
-        const httpLink = new HttpLink( {
-            uri: `${ process.env.NEXT_PUBLIC_SERVER_URL }/graphql`,
-            credentials: 'include',
-        } );
+// const createAuthenticatedLink = () =>
+// {
+//     console.log( 'creating auth link' );
+//     // server
+//     if ( typeof window === 'undefined' )
+//     {
+//         const httpLink = new HttpLink( {
+//             uri: `${ process.env.NEXT_PUBLIC_SERVER_URL }/graphql`,
+//             credentials: 'include',
+//         } );
 
-        return httpLink;
-    }
+//         return httpLink;
+//     }
 
-    // client
-    else
-    {
-        const httpLink = new HttpLink( {
-            uri: `${ process.env.NEXT_PUBLIC_SERVER_URL }/graphql`,
-            credentials: 'include',
-        } );
+//     // client
+//     else
+//     {
+//         const httpLink = new HttpLink( {
+//             uri: `${ process.env.NEXT_PUBLIC_SERVER_URL }/graphql`,
+//             credentials: 'include',
+//         } );
 
-        const wsLink = new WebSocketLink( {
-            uri: `wss://${ process.env.NEXT_PUBLIC_SERVER_DOMAIN }/graphql`,
-            options: {
-                reconnect: true,
-            },
-        } );
+//         const wsLink = new WebSocketLink( {
+//             uri: `wss://${ process.env.NEXT_PUBLIC_SERVER_DOMAIN }/graphql`,
+//             options: {
+//                 reconnect: true,
+//             },
+//         } );
 
-        const splitLink = split(
-            ( { query } ) =>
-            {
-                const definition = getMainDefinition( query );
-                return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
-            },
-            wsLink,
-            httpLink,
-        );
-        return splitLink;
-    }
-};
+//         const splitLink = split(
+//             ( { query } ) =>
+//             {
+//                 const definition = getMainDefinition( query );
+//                 return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+//             },
+//             wsLink,
+//             httpLink,
+//         );
+//         return splitLink;
+//     }
+// };
 
 const createPublicLink = () =>
 {
@@ -61,7 +61,7 @@ const createPublicLink = () =>
     return httpLink;
 };
 
-const createIsomorphicLink = ( ctx: NextPageContext ) =>
+const createIsomorphicLink = ( _: NextPageContext ) =>
 {
     if ( typeof window === 'undefined' )
     {
