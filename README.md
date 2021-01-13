@@ -28,4 +28,4 @@
     - DigitalOcean
     - Vercel
 
-- [Deployed](app.21heathens.tk)
+- [Deployed](https://app.21heathens.tk)
