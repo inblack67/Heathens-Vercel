@@ -20,11 +20,12 @@
     - TypeScript
     - Redis
     - Material-UI
-    - Dokku
     - Docker
+    - Docker Compose
     - NGINX
+    - Let's Encrypt
+    - SSL
     - DigitalOcean
     - Vercel
 
-- [Deployed](prod.heathens.tk)
-- Server Deployed To Do
+- [Deployed](app.21heathens.tk)
