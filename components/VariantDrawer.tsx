@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 import { routes } from '../src/routes';
 import { useRecoilState } from 'recoil';
 import { authState, snackbarState } from '../src/recoil/state';
+import { useApolloClient } from '@apollo/client';
 
 const drawerWidth = 240;
 
@@ -43,6 +44,7 @@ const VariantDrawer = () =>
 
     const { loading, error, data } = useGetMeQuery();
     const [ logoutMutation ] = useLogoutMutation();
+    const apolloClient = useApolloClient();
 
     useEffect( () =>
     {
@@ -75,13 +77,9 @@ const VariantDrawer = () =>
 
     const handleLogout = ( _: SyntheticEvent ) =>
     {
-        logoutMutation( {
-            update: ( cache ) =>
-            {
-                cache.evict( { fieldName: 'getMe' } );
-            }
-        } ).then( () =>
+        logoutMutation().then( async () =>
         {
+            await apolloClient.resetStore();
             setSnackbar( {
                 ...snackbar,
                 isActive: true,
