@@ -27,5 +27,6 @@
     - SSL
     - DigitalOcean
     - Vercel
+    - Recaptcha
 
 - [Deployed](https://app.21heathens.tk)
