@@ -8,15 +8,20 @@ const Layout = ( { children } ) =>
         <Fragment>
             <Head>
                 <meta charSet='utf-8' />
-                <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
+                <link rel='icon' href='./icons/poison.svg' />
+                <meta name='description' content='Slack Clone' />
+                <meta name='viewport' content='width=device-width, initial-scale=1' />
+                <meta name='theme-color' content='#000000' />
                 <meta
-                    name='viewport'
-                    content='width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no'
+                    name='keywords'
+                    content='Typescript, Typeorm, Typegraphql, Slack Clone, Next.js, GraphQL, Material-UI, SSR, React.JS, JavaScript, Recoil, Postgres, Node.JS, Express, SEO, PWA, Backend, Frontent, Full-Stack, Website, Realtime, inblack67, Aman Bhardwaj'
                 />
-                <meta name='description' content='realt time chat app' />
-                <meta name='keywords' content='amoeba' />
+                <meta httpEquiv='X-UA-Compatible' content='ie=edge' />
+                <meta httpEquiv='Content-Type' content='text/html;charset=UTF-8' />
+                <meta name='author' content='inblack67' />
+                <link rel='apple-touch-icon' href='./icons/poison.svg' />
+                <link rel='manifest' href='./manifest.json' />
                 <title>Heathens</title>
-                <meta name='theme-color' content='#000' />
             </Head>
             <VariantDrawer />
             { children }

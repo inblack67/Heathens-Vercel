@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import NextLink from 'next/link';
 import CChannels from '../pages/channels';
 import MenuIcon from '@material-ui/icons/Menu';
-import DarkModeIcon from '@material-ui/icons/Brightness4';
+import GithubIcon from '@material-ui/icons/GitHub';
 import { Grid, Typography, Button, IconButton, Toolbar, AppBar, Drawer, makeStyles, createStyles, Theme, Box } from '@material-ui/core';
 import { useGetMeQuery, useLogoutMutation } from '../src/generated/graphql';
 import { AUTH_HOMEPAGE, UNAUTH_HOMEPAGE } from '../src/constants';
@@ -113,13 +113,15 @@ const VariantDrawer = () =>
     };
 
     let smartLinks = data && data.getMe ? <Fragment>
-        <IconButton>
-            <DarkModeIcon />
-        </IconButton>
         <Box display={ { xs: 'none', sm: 'inline' } }>
             <Button color='inherit'>Welcome { data.getMe.username }</Button>
         </Box>
         <Button color='inherit' onClick={ handleLogout }>Logout</Button>
+        <a href="https://github.com/inblack67/Heathens" rel='noopener noreferrer' target='_blank'>
+            <IconButton>
+                <GithubIcon />
+            </IconButton>
+        </a>
     </Fragment> : <Fragment>
             <NextLink href='/login' passHref>
                 <Button color='inherit'>Login</Button>
@@ -129,6 +131,11 @@ const VariantDrawer = () =>
                     <Button color='inherit'>Register</Button>
                 </NextLink>
             </Box>
+            <a href="https://github.com/inblack67/Heathens" rel='noopener noreferrer' target='_blank'>
+                <IconButton>
+                    <GithubIcon />
+                </IconButton>
+            </a>
         </Fragment>;
 
     return (
