@@ -58,11 +58,7 @@ interface IChatForm
 const Chat: FC<ICChatBox> = ( { channelId } ) =>
 {
 
-    const { register, handleSubmit, errors } = useForm<IChatForm>( {
-        defaultValues: {
-            content: 'Knock Knock'
-        }
-    } );
+    const { register, handleSubmit, errors } = useForm<IChatForm>();
 
     const [ snackbar, setSnackbar ] = useRecoilState( snackbarState );
 
