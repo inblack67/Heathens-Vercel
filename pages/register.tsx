@@ -1,7 +1,7 @@
 import { FormControl, Input, InputLabel, FormHelperText, makeStyles, createStyles, Theme, Grid, Button, Container } from '@material-ui/core';
 import CodeIcon from '@material-ui/icons/Code';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
 import Layout from '../components/Layout';
@@ -14,6 +14,7 @@ import { snackbarState } from '../src/recoil/state';
 import { theme } from '../styles/styles';
 import NextLink from 'next/link';
 import { withApolloAuth } from '../src/apollo/auth';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const useStyles = makeStyles( ( _: Theme ) => createStyles( {
     root: {
@@ -45,6 +46,8 @@ const CRegister = () =>
 
     const [ snackbar, setSnackbar ] = useRecoilState( snackbarState );
 
+    const recaptchaRef = useRef<ReCAPTCHA>();
+
     useEffect( () =>
     {
         if ( error )
@@ -63,10 +66,16 @@ const CRegister = () =>
         }
     }, [ error ] );
 
-    const handleRegister = ( data: IRegister ) =>
+    const handleRegister = async ( data: IRegister ) =>
     {
+        const recaptchaToken = await recaptchaRef.current.executeAsync();
+        recaptchaRef.current.reset();
+
         registerMutation( {
-            variables: data
+            variables: {
+                ...data,
+                recaptchaToken
+            }
         } ).then( () =>
         {
             setSnackbar( {
@@ -177,6 +186,7 @@ const CRegister = () =>
                                     </FormHelperText> : <FormHelperText
                                         id="password-helper-text">What is your dirty little secret?</FormHelperText> }
                                 </FormControl>
+                                <ReCAPTCHA sitekey={ process.env.NEXT_PUBLIC_RECAPTCHA_KEY } size='invisible' ref={ recaptchaRef } />
                                 <Button type='submit' className={ classes.submit } variant='contained' color='primary'>
                                     Register
                                 </Button>

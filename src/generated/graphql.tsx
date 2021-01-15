@@ -94,6 +94,7 @@ export type Mutation = {
 
 
 export type MutationRegisterUserArgs = {
+  recaptchaToken?: Maybe<Scalars['String']>;
   password: Scalars['String'];
   email: Scalars['String'];
   name: Scalars['String'];
@@ -102,6 +103,7 @@ export type MutationRegisterUserArgs = {
 
 
 export type MutationLoginUserArgs = {
+  recaptchaToken?: Maybe<Scalars['String']>;
   password: Scalars['String'];
   username: Scalars['String'];
 };
@@ -207,6 +209,7 @@ export type LeaveChannelMutation = (
 export type LoginMutationVariables = Exact<{
   username: Scalars['String'];
   password: Scalars['String'];
+  recaptchaToken: Scalars['String'];
 }>;
 
 
@@ -245,6 +248,7 @@ export type RegisterMutationVariables = Exact<{
   username: Scalars['String'];
   name: Scalars['String'];
   email: Scalars['String'];
+  recaptchaToken: Scalars['String'];
 }>;
 
 
@@ -529,8 +533,12 @@ export type LeaveChannelMutationHookResult = ReturnType<typeof useLeaveChannelMu
 export type LeaveChannelMutationResult = Apollo.MutationResult<LeaveChannelMutation>;
 export type LeaveChannelMutationOptions = Apollo.BaseMutationOptions<LeaveChannelMutation, LeaveChannelMutationVariables>;
 export const LoginDocument = gql`
-    mutation Login($username: String!, $password: String!) {
-  loginUser(username: $username, password: $password) {
+    mutation Login($username: String!, $password: String!, $recaptchaToken: String!) {
+  loginUser(
+    username: $username
+    password: $password
+    recaptchaToken: $recaptchaToken
+  ) {
     name
   }
 }
@@ -552,6 +560,7 @@ export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutati
  *   variables: {
  *      username: // value for 'username'
  *      password: // value for 'password'
+ *      recaptchaToken: // value for 'recaptchaToken'
  *   },
  * });
  */
@@ -624,12 +633,13 @@ export type PostMessageMutationHookResult = ReturnType<typeof usePostMessageMuta
 export type PostMessageMutationResult = Apollo.MutationResult<PostMessageMutation>;
 export type PostMessageMutationOptions = Apollo.BaseMutationOptions<PostMessageMutation, PostMessageMutationVariables>;
 export const RegisterDocument = gql`
-    mutation Register($password: String!, $username: String!, $name: String!, $email: String!) {
+    mutation Register($password: String!, $username: String!, $name: String!, $email: String!, $recaptchaToken: String!) {
   registerUser(
     password: $password
     username: $username
     name: $name
     email: $email
+    recaptchaToken: $recaptchaToken
   ) {
     name
   }
@@ -654,6 +664,7 @@ export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, Regis
  *      username: // value for 'username'
  *      name: // value for 'name'
  *      email: // value for 'email'
+ *      recaptchaToken: // value for 'recaptchaToken'
  *   },
  * });
  */
