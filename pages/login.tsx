@@ -13,6 +13,7 @@ import { ILogin } from '../src/interfaces';
 import { snackbarState } from '../src/recoil/state';
 import { theme } from '../styles/styles';
 import NextLink from 'next/link';
+import { withApolloAuth } from '../src/apollo/auth';
 
 const useStyles = makeStyles( ( _: Theme ) => createStyles( {
     root: {
@@ -134,4 +135,4 @@ const CLogin = () =>
     );
 };
 
-export default withApollo( { ssr: false } )( CLogin ); 
+export default withApolloAuth( { ssr: false } )( CLogin ); 

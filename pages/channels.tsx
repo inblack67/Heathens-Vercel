@@ -9,6 +9,7 @@ import { snackbarState } from "../src/recoil/state";
 import { withApollo } from "../src/apollo";
 import Layout from "../components/Layout";
 import { useRouter } from "next/router";
+import { withApolloAuth } from "../src/apollo/auth";
 
 const drawerWidth = 240;
 
@@ -118,4 +119,4 @@ const CChannels: FC<ICChannels> = () =>
     );
 };
 
-export default withApollo( { ssr: false } )( CChannels );
+export default withApolloAuth( { ssr: false } )( CChannels );

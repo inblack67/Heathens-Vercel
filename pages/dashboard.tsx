@@ -1,10 +1,10 @@
 import Container from '@material-ui/core/Container';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import CChannel from '../components/CChannel';
 import Layout from '../components/Layout';
-import { withApollo } from '../src/apollo';
+import { withApolloAuth } from '../src/apollo/auth';
 import { AUTH_HOMEPAGE } from '../src/constants';
 import { NewMessageDocument, useGetMyChannelQuery } from "../src/generated/graphql";
 import { channelState, snackbarState } from '../src/recoil/state';
@@ -60,4 +60,4 @@ const Dashboard = () =>
 };
 
 
-export default withApollo( { ssr: false } )( Dashboard );
+export default withApolloAuth( { ssr: false } )( Dashboard );

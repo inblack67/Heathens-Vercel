@@ -13,6 +13,7 @@ import { IRegister } from '../src/interfaces';
 import { snackbarState } from '../src/recoil/state';
 import { theme } from '../styles/styles';
 import NextLink from 'next/link';
+import { withApolloAuth } from '../src/apollo/auth';
 
 const useStyles = makeStyles( ( _: Theme ) => createStyles( {
     root: {
@@ -189,4 +190,4 @@ const CRegister = () =>
 };
 
 
-export default withApollo( { ssr: false } )( CRegister );
+export default withApolloAuth( { ssr: false } )( CRegister );
