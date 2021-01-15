@@ -40,6 +40,13 @@ const CChannel: FC<ICChannel> = ( { channel } ) =>
         leaveChannel( {
             variables: {
                 channelId: channel.id
+            },
+            update: ( cache ) =>
+            {
+                cache.evict( { fieldName: 'getSingleChannel' } );
+                cache.evict( { fieldName: 'getChannelMessages' } );
+                cache.evict( { fieldName: 'getChannelUsers' } );
+                cache.evict( { fieldName: 'getMyChannel' } );
             }
         } ).then( () =>
         {
