@@ -30,3 +30,7 @@
     - Recaptcha
 
 - [Deployed](https://app.21heathens.tk)
+
+- Coming Soon
+    - Image Uploads
+    - End-To-End Encryption
