@@ -30,7 +30,7 @@ const createPrivateLink = ( ctx: NextPageContext ) =>
         } );
 
         const wsLink = new WebSocketLink( {
-            uri: `ws://${ process.env.NEXT_PUBLIC_SERVER_DOMAIN }/graphql`,
+            uri: `wss://${ process.env.NEXT_PUBLIC_SERVER_DOMAIN }/graphql`,
             options: {
                 reconnect: true,
                 lazy: true
