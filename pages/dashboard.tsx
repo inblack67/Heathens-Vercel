@@ -6,7 +6,7 @@ import CChannel from '../components/CChannel';
 import Layout from '../components/Layout';
 import { withApolloAuth } from '../src/apollo/auth';
 import { useGetMyChannelQuery } from "../src/generated/graphql";
-import { channelState, snackbarState } from '../src/recoil/state';
+import { snackbarState } from '../src/recoil/state';
 
 
 const Dashboard = () => {
