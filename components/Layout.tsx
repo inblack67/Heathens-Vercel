@@ -2,8 +2,7 @@ import Head from 'next/head';
 import { Fragment } from 'react';
 import VariantDrawer from './VariantDrawer';
 
-const Layout = ( { children } ) =>
-{
+const Layout = ({ children }) => {
     return (
         <Fragment>
             <Head>

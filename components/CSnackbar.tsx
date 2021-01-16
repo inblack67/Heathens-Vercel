@@ -3,21 +3,18 @@ import Snackbar from '@material-ui/core/Snackbar';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { snackbarState } from '../src/recoil/state';
 
-const Alert = ( props: any ) =>
-{
+const Alert = (props: any) => {
     return <MuiAlert elevation={ 6 } variant='filled' { ...props } />;
 };
 
-const CSnackbar = () =>
-{
+const CSnackbar = () => {
 
-    const { isActive, severity, message } = useRecoilValue( snackbarState );
+    const { isActive, severity, message } = useRecoilValue(snackbarState);
 
-    const [ snackbar, setSnackbar ] = useRecoilState( snackbarState );
+    const [ snackbar, setSnackbar ] = useRecoilState(snackbarState);
 
-    const handleClose = () =>
-    {
-        setSnackbar( {
+    const handleClose = () => {
+        setSnackbar({
             ...snackbar,
             isActive: false,
             message: null,
@@ -25,7 +22,7 @@ const CSnackbar = () =>
                 ...snackbar.severity,
                 type: null
             }
-        } );
+        });
     };
 
     return (

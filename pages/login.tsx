@@ -16,27 +16,26 @@ import NextLink from 'next/link';
 import { withApolloAuth } from '../src/apollo/auth';
 import ReCAPTCHA from 'react-google-recaptcha';
 
-const useStyles = makeStyles( ( _: Theme ) => createStyles( {
+const useStyles = makeStyles((_: Theme) => createStyles({
     root: {
         flexGrow: 1,
-        marginTop: theme.spacing( 8 ),
+        marginTop: theme.spacing(8),
     },
     btns: {
-        marginTop: theme.spacing( 2 ),
+        marginTop: theme.spacing(2),
     },
     title: {
-        marginBottom: theme.spacing( 2 )
+        marginBottom: theme.spacing(2)
     },
     marginAuto: {
         margin: 'auto'
     },
     submit: {
-        marginTop: theme.spacing( 2 )
+        marginTop: theme.spacing(2)
     }
-} ) );
+}));
 
-const CLogin = () =>
-{
+const CLogin = () => {
     const router = useRouter();
     const classes = useStyles();
 
@@ -44,16 +43,14 @@ const CLogin = () =>
 
     const [ loginMutation, { loading, error, data } ] = useLoginMutation();
 
-    const [ snackbar, setSnackbar ] = useRecoilState( snackbarState );
+    const [ snackbar, setSnackbar ] = useRecoilState(snackbarState);
 
     const recaptchaRef = useRef<ReCAPTCHA>();
 
-    useEffect( () =>
-    {
-        if ( error )
-        {
-            console.log( 'error = ', error );
-            setSnackbar( {
+    useEffect(() => {
+        if (error) {
+            console.log('error = ', error);
+            setSnackbar({
                 ...snackbar,
                 isActive: true,
                 message: error.message,
@@ -61,25 +58,23 @@ const CLogin = () =>
                     ...snackbar.severity,
                     type: 'error',
                 }
-            } );
+            });
         }
-    }, [ error ] );
+    }, [ error ]);
 
-    const handleLogin = async ( { username, password }: ILogin ) =>
-    {
+    const handleLogin = async ({ username, password }: ILogin) => {
         const recaptchaToken = await recaptchaRef.current.executeAsync();
 
         recaptchaRef.current.reset();
 
-        loginMutation( {
+        loginMutation({
             variables: {
                 username,
                 password,
                 recaptchaToken
             }
-        } ).then( () =>
-        {
-            setSnackbar( {
+        }).then(() => {
+            setSnackbar({
                 ...snackbar,
                 isActive: true,
                 message: 'Logged In!',
@@ -87,15 +82,14 @@ const CLogin = () =>
                     ...snackbar.severity,
                     type: 'success',
                 }
-            } );
+            });
 
-            router.push( AUTH_HOMEPAGE );
+            router.push(AUTH_HOMEPAGE);
 
-        } ).catch( err => console.error( err ) );
+        }).catch(err => console.error(err));
     };
 
-    if ( loading )
-    {
+    if (loading) {
         return <Preloader />;
     }
 
@@ -113,20 +107,20 @@ const CLogin = () =>
                             </NextLink>
                         </Grid>
                         <Grid item lg={ 6 } xs={ 12 }>
-                            <form onSubmit={ handleSubmit( handleLogin ) } autoComplete='off'>
+                            <form onSubmit={ handleSubmit(handleLogin) } autoComplete='off'>
                                 <FormControl fullWidth error={ errors.username ? true : false }>
                                     <InputLabel htmlFor="username"> Username</InputLabel>
-                                    <Input id="username" name='username' inputRef={ register( {
+                                    <Input id="username" name='username' inputRef={ register({
                                         required: 'Username is required',
-                                    } ) } />
+                                    }) } />
                                     <FormHelperText id="username-helper-text">What was your poison?</FormHelperText>
                                 </FormControl>
                                 <FormControl error={ errors.password ? true : false }
                                     fullWidth>
                                     <InputLabel htmlFor="password"> Password</InputLabel>
-                                    <Input type='password' name='password' id="password" inputRef={ register( {
+                                    <Input type='password' name='password' id="password" inputRef={ register({
                                         required: 'Password is required'
-                                    } ) } />
+                                    }) } />
                                     <FormHelperText
                                         id="password-helper-text">What was your dirty little secret?</FormHelperText>
                                 </FormControl>
@@ -143,4 +137,4 @@ const CLogin = () =>
     );
 };
 
-export default withApolloAuth( { ssr: false } )( CLogin ); 
+export default withApolloAuth({ ssr: false })(CLogin); 

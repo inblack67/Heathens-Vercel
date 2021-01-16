@@ -2,56 +2,48 @@ import { Button, createStyles, Grid, makeStyles, Theme, Typography } from "@mate
 import { useRouter } from "next/router";
 import { FC } from "react";
 import { useRecoilState } from "recoil";
-import { AUTH_HOMEPAGE } from "../src/constants";
 import { ChannelEntity, useLeaveChannelMutation, UserEntity } from "../src/generated/graphql";
-import { channelState, snackbarState } from "../src/recoil/state";
+import { snackbarState } from "../src/recoil/state";
 import CChat from "./CChat";
 import ChannelUsers from "./ChannelUsers";
 
-const useStyles = makeStyles( ( theme: Theme ) => createStyles( {
+const useStyles = makeStyles((theme: Theme) => createStyles({
     verticalMargin: {
         margin: '1rem 0 1rem 0'
     },
-} ) );
+}));
 
-interface ICChannel
-{
+interface ICChannel {
     channel: {
         __typename?: "ChannelEntity";
     } & Pick<ChannelEntity, "desc" | "id" | "name"> & {
-        users?: ( {
+        users?: ({
             __typename?: "UserEntity";
-        } & Pick<UserEntity, "id" | "username"> )[];
+        } & Pick<UserEntity, "id" | "username">)[];
     };
 }
 
-const CChannel: FC<ICChannel> = ( { channel } ) =>
-{
+const CChannel: FC<ICChannel> = ({ channel }) => {
 
     const router = useRouter();
     const classes = useStyles();
 
     const [ leaveChannel ] = useLeaveChannelMutation();
-    const [ _, setChannel ] = useRecoilState( channelState );
-    const [ snackbar, setSnackbar ] = useRecoilState( snackbarState );
+    const [ snackbar, setSnackbar ] = useRecoilState(snackbarState);
 
-    const fireLeaveChannel = () =>
-    {
-        leaveChannel( {
+    const fireLeaveChannel = () => {
+        leaveChannel({
             variables: {
                 channelId: channel.id
             },
-            update: ( cache ) =>
-            {
-                cache.evict( { fieldName: 'getSingleChannel' } );
-                cache.evict( { fieldName: 'getChannelMessages' } );
-                cache.evict( { fieldName: 'getChannelUsers' } );
-                cache.evict( { fieldName: 'getMyChannel' } );
+            update: (cache) => {
+                cache.evict({ fieldName: 'getSingleChannel' });
+                cache.evict({ fieldName: 'getChannelMessages' });
+                cache.evict({ fieldName: 'getChannelUsers' });
+                cache.evict({ fieldName: 'getMyChannel' });
             }
-        } ).then( () =>
-        {
-            setChannel( null );
-            setSnackbar( {
+        }).then(() => {
+            setSnackbar({
                 ...snackbar,
                 isActive: true,
                 severity: {
@@ -59,9 +51,9 @@ const CChannel: FC<ICChannel> = ( { channel } ) =>
                     type: 'info'
                 },
                 message: 'You left the channel'
-            } );
-            router.push( '/' );
-        } ).catch( err => console.error( err ) );
+            });
+            router.push('/');
+        }).catch(err => console.error(err));
     };
 
     return (

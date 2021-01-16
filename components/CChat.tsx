@@ -1,14 +1,14 @@
 import { FC, useEffect, useRef } from 'react';
 import { createStyles, makeStyles, Theme, Paper, Grid, Divider, Typography, Container, Fab, FormControl, InputLabel, Input, FormHelperText } from '@material-ui/core';
 import SendIcon from '@material-ui/icons/Send';
-import { useGetChannelMessagesQuery, usePostMessageMutation, NewMessageDocument, useNewMessageSubscription } from '../src/generated/graphql';
+import { useGetChannelMessagesQuery, usePostMessageMutation, NewMessageDocument } from '../src/generated/graphql';
 import { useForm } from 'react-hook-form';
 import { useRecoilState } from "recoil";
 import { snackbarState } from "../src/recoil/state";
 import Preloader from "./Preloader";
 import Messages from './Messages';
 
-const useStyles = makeStyles( ( theme: Theme ) => createStyles( {
+const useStyles = makeStyles((theme: Theme) => createStyles({
     messageArea: {
         height: '65vh',
         overflowY: 'auto',
@@ -43,76 +43,64 @@ const useStyles = makeStyles( ( theme: Theme ) => createStyles( {
     current: {
         color: 'red',
     }
-} ) );
+}));
 
-interface ICChatBox
-{
+interface ICChatBox {
     channelId: number;
 }
 
-interface IChatForm
-{
+interface IChatForm {
     content: string;
 }
 
-const Chat: FC<ICChatBox> = ( { channelId } ) =>
-{
+const Chat: FC<ICChatBox> = ({ channelId }) => {
 
     const { register, handleSubmit, errors } = useForm<IChatForm>();
 
-    const [ snackbar, setSnackbar ] = useRecoilState( snackbarState );
+    const [ snackbar, setSnackbar ] = useRecoilState(snackbarState);
 
-    const { data, loading, subscribeToMore } = useGetChannelMessagesQuery( {
+    const { data, loading, subscribeToMore } = useGetChannelMessagesQuery({
         variables: {
             channelId: channelId
         },
         fetchPolicy: 'network-only'
-    } );
+    });
 
     const [ postMessageMutation, { error } ] = usePostMessageMutation();
 
     const messageRef = useRef<HTMLDivElement>();
 
-    useEffect( () =>
-    {
-        if ( messageRef.current )
-        {
+    useEffect(() => {
+        if (messageRef.current) {
             messageRef.current.scrollTop = messageRef.current.scrollHeight;
         }
-    } );
+    });
 
-    useEffect( () =>
-    {
-        const unsub = subscribeToMore( {
+    useEffect(() => {
+        const unsub = subscribeToMore({
             document: NewMessageDocument,
             variables: {
                 channelId
             },
-            updateQuery: ( prev, res: any ) =>
-            {
-                if ( !res.subscriptionData.data )
-                {
+            updateQuery: (prev, res: any) => {
+                if (!res.subscriptionData.data) {
                     return prev;
                 }
-                // console.log( 'res = ', res );
                 return {
                     ...prev,
                     getChannelMessages: [ ...prev.getChannelMessages, res.subscriptionData.data.newMessage ]
                 };
             }
-        } );
+        });
 
-        return () =>
-        {
+        return () => {
             unsub();
         };
-    }, [] );
+    }, []);
 
-    useEffect( () =>
-    {
-        if ( error )
-        {
-            setSnackbar( {
+    useEffect(() => {
+        if (error) {
+            setSnackbar({
                 ...snackbar,
                 isActive: true,
                 severity: {
@@ -120,26 +108,23 @@ const Chat: FC<ICChatBox> = ( { channelId } ) =>
                     type: 'error'
                 },
                 message: error.message
-            } );
+            });
         }
-    }, [ error ] );
+    }, [ error ]);
 
     const classes = useStyles();
 
-    const postMessage = ( { content }: IChatForm ) =>
-    {
-        postMessageMutation( {
+    const postMessage = ({ content }: IChatForm) => {
+        postMessageMutation({
             variables: {
                 channelId,
                 content
             }
-        } ).then( () =>
-        {
-        } ).catch( err => console.error( err ) );
+        }).then(() => {
+        }).catch(err => console.error(err));
     };
 
-    if ( loading )
-    {
+    if (loading) {
         return <Preloader />;
     }
 
@@ -155,14 +140,14 @@ const Chat: FC<ICChatBox> = ( { channelId } ) =>
                         </div>
                     </Container>
                     <Divider />
-                    <form onSubmit={ handleSubmit( postMessage ) }>
+                    <form onSubmit={ handleSubmit(postMessage) }>
                         <Grid container className={ classes.form }>
                             <Grid item xs={ 11 }>
                                 <FormControl fullWidth error={ errors.content ? true : false }>
                                     <InputLabel htmlFor="content">Type Some Markdown Already</InputLabel>
-                                    <Input multiline id="content" name='content' inputRef={ register( {
+                                    <Input multiline id="content" name='content' inputRef={ register({
                                         required: 'What\'s your hurry?',
-                                    } ) } />
+                                    }) } />
                                     { errors.content ? <FormHelperText
                                         error
                                         id="content-helper-text">{ errors.content.message }

@@ -1,11 +1,10 @@
 import { createStyles, Grid, List, ListItem, ListItemText, makeStyles, Theme } from "@material-ui/core";
-import { FC, useEffect, useRef } from "react";
+import { FC } from "react";
 import { RenderMarkdown } from 'use-syntaxer';
-import { useRecoilValue } from 'recoil';
-import { authState } from '../src/recoil/state';
-import { MessageEntity, UserEntity } from "../src/generated/graphql";
+import { MessageEntity, useGetMeQuery, UserEntity } from "../src/generated/graphql";
+import Preloader from "./Preloader";
 
-const useStyles = makeStyles( ( theme: Theme ) => createStyles( {
+const useStyles = makeStyles((theme: Theme) => createStyles({
     messageArea: {
         height: '65vh',
         overflowY: 'auto',
@@ -40,21 +39,24 @@ const useStyles = makeStyles( ( theme: Theme ) => createStyles( {
     current: {
         color: 'red',
     }
-} ) );
+}));
 
-interface IMessages
-{
-    messages: ( { __typename?: "MessageEntity"; } & Pick<MessageEntity, "content" | "id" | "createdAt"> & { poster: { __typename?: "UserEntity"; } & Pick<UserEntity, "id" | "username">; } )[],
+interface IMessages {
+    messages: ({ __typename?: "MessageEntity"; } & Pick<MessageEntity, "content" | "id" | "createdAt"> & { poster: { __typename?: "UserEntity"; } & Pick<UserEntity, "id" | "username">; })[],
 }
 
-const Messages: FC<IMessages> = ( { messages } ) =>
-{
+const Messages: FC<IMessages> = ({ messages }) => {
+
     const classes = useStyles();
-    const auth = useRecoilValue( authState );
+    const { data, loading } = useGetMeQuery();
+
+    if (loading) {
+        return <Preloader />;
+    }
 
     return (
         <List>
-            {messages.map( message => <ListItem key={ message.id }>
+            {messages.map(message => <ListItem key={ message.id }>
                 <Grid container >
                     <Grid item xs={ 12 }>
                         <ListItemText className={ classes.message }>
@@ -62,13 +64,13 @@ const Messages: FC<IMessages> = ( { messages } ) =>
                         </ListItemText>
                     </Grid>
                     <Grid item xs={ 12 }>
-                        { auth && auth.id === message.poster.id ? <ListItemText className={ classes.current }>
+                        { data && data.getMe.id === message.poster.id ? <ListItemText className={ classes.current }>
                             ~ { message.poster.username }
                         </ListItemText> : <ListItemText secondary={ `~ ${ message.poster.username }` } /> }
                     </Grid>
                 </Grid>
-            </ListItem> ) }
-        </List> );
+            </ListItem>) }
+        </List>);
 };
 
 export default Messages;

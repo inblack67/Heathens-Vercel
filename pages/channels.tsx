@@ -6,14 +6,13 @@ import DevicesIcon from '@material-ui/icons/Devices';
 import AcUnitIcon from '@material-ui/icons/AcUnit';
 import { useRecoilState } from "recoil";
 import { snackbarState } from "../src/recoil/state";
-import { withApollo } from "../src/apollo";
 import Layout from "../components/Layout";
 import { useRouter } from "next/router";
 import { withApolloAuth } from "../src/apollo/auth";
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles( ( theme: Theme ) => createStyles( {
+const useStyles = makeStyles((theme: Theme) => createStyles({
     drawerPaper: {
         width: drawerWidth,
         // background: theme.palette.primary.main,
@@ -28,14 +27,12 @@ const useStyles = makeStyles( ( theme: Theme ) => createStyles( {
     current: {
         color: theme.palette.secondary.main
     }
-} ) );
+}));
 
-interface ICChannels
-{
+interface ICChannels {
 }
 
-const CChannels: FC<ICChannels> = () =>
-{
+const CChannels: FC<ICChannels> = () => {
     const router = useRouter();
 
     const { data, error, loading } = useGetChannelsQuery();
@@ -43,25 +40,21 @@ const CChannels: FC<ICChannels> = () =>
 
     const classes = useStyles();
 
-    const [ channelId, setChannelId ] = useState<number>( null );
+    const [ channelId, setChannelId ] = useState<number>(null);
 
-    const [ snackbar, setSnackbar ] = useRecoilState( snackbarState );
+    const [ snackbar, setSnackbar ] = useRecoilState(snackbarState);
 
     const [ joinChannel ] = useJoinChannelMutation();
 
-    useEffect( () =>
-    {
-        if ( !getMyChannelRes.loading && getMyChannelRes.data )
-        {
-            router.replace( '/dashboard' );
+    useEffect(() => {
+        if (!getMyChannelRes.loading && getMyChannelRes.data) {
+            router.replace('/dashboard');
         }
-    } );
+    });
 
-    useEffect( () =>
-    {
-        if ( error )
-        {
-            setSnackbar( {
+    useEffect(() => {
+        if (error) {
+            setSnackbar({
                 ...snackbar,
                 isActive: true,
                 message: error.message,
@@ -69,20 +62,18 @@ const CChannels: FC<ICChannels> = () =>
                     ...snackbar.severity,
                     type: 'error'
                 }
-            } );
+            });
         }
-    }, [ error ] );
+    }, [ error ]);
 
-    const handleChannelClick = ( channelId: number, name: string ) => () =>
-    {
-        setChannelId( channelId );
-        joinChannel( {
+    const handleChannelClick = (channelId: number, name: string) => () => {
+        setChannelId(channelId);
+        joinChannel({
             variables: {
                 channelId
             }
-        } ).then( () =>
-        {
-            setSnackbar( {
+        }).then(() => {
+            setSnackbar({
                 ...snackbar,
                 isActive: true,
                 message: 'Channel Joined!',
@@ -90,27 +81,26 @@ const CChannels: FC<ICChannels> = () =>
                     ...snackbar.severity,
                     type: 'info'
                 }
-            } );
+            });
 
-            router.push( '/dashboard' );
+            router.push('/dashboard');
 
-        } ).catch( err => console.error( err ) );
+        }).catch(err => console.error(err));
     };
 
-    if ( loading )
-    {
+    if (loading) {
         return <Preloader />;
     }
 
     return (
         <Layout>
             <List>
-                { data ? data.getChannels.map( ( channel ) => (
+                { data ? data.getChannels.map((channel) => (
                     <ListItem disabled={ channel.id === channelId } button key={ channel.id }>
                         <ListItemIcon className={ channel.id === channelId ? classes.current : null }><DevicesIcon /></ListItemIcon>
-                        <ListItemText className={ channel.id === channelId ? classes.current : null } onClick={ handleChannelClick( channel.id, channel.name ) } primary={ channel.name } />
+                        <ListItemText className={ channel.id === channelId ? classes.current : null } onClick={ handleChannelClick(channel.id, channel.name) } primary={ channel.name } />
                     </ListItem>
-                ) ) : <ListItem button>
+                )) : <ListItem button>
                         <ListItemIcon><AcUnitIcon /></ListItemIcon>
                         No channels yet
                 </ListItem> }
@@ -119,4 +109,4 @@ const CChannels: FC<ICChannels> = () =>
     );
 };
 
-export default withApolloAuth( { ssr: false } )( CChannels );
+export default withApolloAuth({ ssr: false })(CChannels);

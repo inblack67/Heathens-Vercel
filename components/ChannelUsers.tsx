@@ -5,8 +5,8 @@ import { useGetChannelUsersQuery, JoinedChannelDocument, LeftChannelDocument } f
 import Preloader from './Preloader';
 import clsx from 'clsx';
 
-const useStyles = makeStyles( ( theme: Theme ) =>
-    createStyles( {
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
         root: {
             width: '100%',
             maxWidth: 360,
@@ -15,35 +15,30 @@ const useStyles = makeStyles( ( theme: Theme ) =>
         verticalMargin: {
             margin: '0.5rem 0 0.5rem 0'
         },
-    } ),
+    }),
 );
 
-interface IUsers
-{
+interface IUsers {
     channelId: number;
 }
 
-const ChannelUsers: FC<IUsers> = ( { channelId } ) =>
-{
+const ChannelUsers: FC<IUsers> = ({ channelId }) => {
     const classes = useStyles();
-    const { loading, error, data, subscribeToMore } = useGetChannelUsersQuery( {
+    const { loading, error, data, subscribeToMore } = useGetChannelUsersQuery({
         variables: {
             channelId
         },
         fetchPolicy: 'network-only'
-    } );
+    });
 
-    useEffect( () =>
-    {
-        const unsub1 = subscribeToMore( {
+    useEffect(() => {
+        const unsub1 = subscribeToMore({
             document: JoinedChannelDocument,
             variables: {
                 channelId
             },
-            updateQuery: ( prev, res: any ) =>
-            {
-                if ( !res.subscriptionData.data )
-                {
+            updateQuery: (prev, res: any) => {
+                if (!res.subscriptionData.data) {
                     return prev;
                 }
                 const joinedUser = res.subscriptionData.data.joinedChannel;
@@ -52,56 +47,50 @@ const ChannelUsers: FC<IUsers> = ( { channelId } ) =>
                     getChannelUsers: [ ...prev.getChannelUsers, joinedUser ]
                 };
             }
-        } );
+        });
 
-        return () =>
-        {
+        return () => {
             return unsub1();
         };
-    }, [] );
+    }, []);
 
-    useEffect( () =>
-    {
-        const unsub2 = subscribeToMore( {
+    useEffect(() => {
+        const unsub2 = subscribeToMore({
             document: LeftChannelDocument,
             variables: {
                 channelId
             },
-            updateQuery: ( prev, res: any ) =>
-            {
-                if ( !res.subscriptionData.data )
-                {
+            updateQuery: (prev, res: any) => {
+                if (!res.subscriptionData.data) {
                     return prev;
                 }
                 const leftUser = res.subscriptionData.data.leftChannel;
                 return {
                     ...prev,
-                    getChannelUsers: prev.getChannelUsers.filter( user => user.id !== leftUser.id )
+                    getChannelUsers: prev.getChannelUsers.filter(user => user.id !== leftUser.id)
                 };
             }
-        } );
+        });
 
-        return () =>
-        {
+        return () => {
             unsub2();
         };
-    }, [] );
+    }, []);
 
-    if ( loading )
-    {
+    if (loading) {
         return <Preloader />;
     }
 
     return (
         <List >
-            {data && data.getChannelUsers.length > 0 ? data.getChannelUsers.map( user => <ListItem className={ clsx( classes.root, classes.verticalMargin ) } key={ user.id }>
+            {data && data.getChannelUsers.length > 0 ? data.getChannelUsers.map(user => <ListItem className={ clsx(classes.root, classes.verticalMargin) } key={ user.id }>
                 <ListItemAvatar>
                     <Avatar>
                         <ImageIcon />
                     </Avatar>
                 </ListItemAvatar>
                 <ListItemText primary={ user.username } />
-            </ListItem> ) : <Typography align='center' variant='h6' color='secondary'>
+            </ListItem>) : <Typography align='center' variant='h6' color='secondary'>
                     No users yet</Typography> }
         </List>
     );

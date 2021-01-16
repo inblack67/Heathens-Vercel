@@ -16,27 +16,26 @@ import NextLink from 'next/link';
 import { withApolloAuth } from '../src/apollo/auth';
 import ReCAPTCHA from 'react-google-recaptcha';
 
-const useStyles = makeStyles( ( _: Theme ) => createStyles( {
+const useStyles = makeStyles((_: Theme) => createStyles({
     root: {
         flexGrow: 1,
-        marginTop: theme.spacing( 8 ),
+        marginTop: theme.spacing(8),
     },
     btns: {
-        marginTop: theme.spacing( 2 ),
+        marginTop: theme.spacing(2),
     },
     title: {
-        marginBottom: theme.spacing( 2 )
+        marginBottom: theme.spacing(2)
     },
     marginAuto: {
         margin: 'auto'
     },
     submit: {
-        marginTop: theme.spacing( 2 )
+        marginTop: theme.spacing(2)
     }
-} ) );
+}));
 
-const CRegister = () =>
-{
+const CRegister = () => {
     const router = useRouter();
     const classes = useStyles();
 
@@ -44,16 +43,14 @@ const CRegister = () =>
 
     const [ registerMutation, { loading, error, data } ] = useRegisterMutation();
 
-    const [ snackbar, setSnackbar ] = useRecoilState( snackbarState );
+    const [ snackbar, setSnackbar ] = useRecoilState(snackbarState);
 
     const recaptchaRef = useRef<ReCAPTCHA>();
 
-    useEffect( () =>
-    {
-        if ( error )
-        {
-            console.log( 'error = ', error );
-            setSnackbar( {
+    useEffect(() => {
+        if (error) {
+            console.log('error = ', error);
+            setSnackbar({
                 ...snackbar,
                 isActive: true,
                 message: error.message,
@@ -61,24 +58,22 @@ const CRegister = () =>
                     ...snackbar.severity,
                     type: 'error',
                 }
-            } );
+            });
 
         }
-    }, [ error ] );
+    }, [ error ]);
 
-    const handleRegister = async ( data: IRegister ) =>
-    {
+    const handleRegister = async (data: IRegister) => {
         const recaptchaToken = await recaptchaRef.current.executeAsync();
         recaptchaRef.current.reset();
 
-        registerMutation( {
+        registerMutation({
             variables: {
                 ...data,
                 recaptchaToken
             }
-        } ).then( () =>
-        {
-            setSnackbar( {
+        }).then(() => {
+            setSnackbar({
                 ...snackbar,
                 isActive: true,
                 message: 'Registered!',
@@ -86,16 +81,15 @@ const CRegister = () =>
                     ...snackbar.severity,
                     type: 'success',
                 }
-            } );
+            });
 
-            router.push( AUTH_HOMEPAGE );
+            router.push(AUTH_HOMEPAGE);
 
 
-        } ).catch( err => console.error( err ) );
+        }).catch(err => console.error(err));
     };
 
-    if ( loading )
-    {
+    if (loading) {
         return <Preloader />;
     }
 
@@ -113,16 +107,16 @@ const CRegister = () =>
                             </NextLink>
                         </Grid>
                         <Grid item lg={ 6 } xs={ 12 }>
-                            <form onSubmit={ handleSubmit( handleRegister ) } autoComplete='off'>
+                            <form onSubmit={ handleSubmit(handleRegister) } autoComplete='off'>
                                 <FormControl fullWidth error={ errors.name ? true : false }>
                                     <InputLabel htmlFor="name">Name</InputLabel>
-                                    <Input id="name" name='name' inputRef={ register( {
+                                    <Input id="name" name='name' inputRef={ register({
                                         required: 'name is required',
                                         maxLength: {
                                             value: 20,
                                             message: 'Name cannot exceed 20 chars'
                                         }
-                                    } ) } />
+                                    }) } />
                                     { errors.name ? <FormHelperText
                                         error
                                         id="name-helper-text">{ errors.name.message }
@@ -131,13 +125,13 @@ const CRegister = () =>
                                 <FormControl error={ errors.email ? true : false }
                                     fullWidth>
                                     <InputLabel htmlFor="email"> Email</InputLabel>
-                                    <Input name='email' id="email" inputRef={ register( {
+                                    <Input name='email' id="email" inputRef={ register({
                                         required: 'Email is required',
                                         pattern: {
                                             value: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                                             message: 'Email is invalid'
                                         }
-                                    } ) } />
+                                    }) } />
                                     { errors.email ? <FormHelperText
                                         error
                                         id="email-helper-text">{ errors.email.message }
@@ -145,13 +139,13 @@ const CRegister = () =>
                                 </FormControl>
                                 <FormControl fullWidth error={ errors.username ? true : false }>
                                     <InputLabel htmlFor="username"> Username</InputLabel>
-                                    <Input id="username" name='username' inputRef={ register( {
+                                    <Input id="username" name='username' inputRef={ register({
                                         required: 'Username is required',
                                         maxLength: {
                                             value: 20,
                                             message: 'Username cannot exceed 20 chars'
                                         }
-                                    } ) } />
+                                    }) } />
                                     { errors.username ? <FormHelperText
                                         error
                                         id="username-helper-text">{ errors.username.message }
@@ -161,7 +155,7 @@ const CRegister = () =>
                                 <FormControl error={ errors.password ? true : false }
                                     fullWidth>
                                     <InputLabel htmlFor="password"> Password</InputLabel>
-                                    <Input type='password' name='password' id="password" inputRef={ register( {
+                                    <Input type='password' name='password' id="password" inputRef={ register({
                                         required: 'Password is required',
                                         maxLength: {
                                             value: 30,
@@ -171,15 +165,14 @@ const CRegister = () =>
                                             value: 8,
                                             message: 'Password must be atleast 8 chars long'
                                         },
-                                        validate: value =>
-                                        {
+                                        validate: value => {
                                             return (
-                                                [ /[a-z]/, /[A-Z]/, /[0-9]/, /[^a-zA-Z0-9]/ ].every( ( pattern ) =>
-                                                    pattern.test( value )
+                                                [ /[a-z]/, /[A-Z]/, /[0-9]/, /[^a-zA-Z0-9]/ ].every((pattern) =>
+                                                    pattern.test(value)
                                                 ) || "Password must include lower, upper, number, and special chars"
                                             );
                                         },
-                                    } ) } />
+                                    }) } />
                                     { errors.password ? <FormHelperText
                                         error
                                         id="password-helper-text">{ errors.password.message }
@@ -200,4 +193,4 @@ const CRegister = () =>
 };
 
 
-export default withApolloAuth( { ssr: false } )( CRegister );
+export default withApolloAuth({ ssr: false })(CRegister);

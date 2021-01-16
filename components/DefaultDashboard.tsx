@@ -1,13 +1,12 @@
 import { Grid, Typography, Container, makeStyles, createStyles, Theme } from "@material-ui/core";
 
-const useStyles = makeStyles( ( theme: Theme ) => createStyles( {
+const useStyles = makeStyles((theme: Theme) => createStyles({
     root: {
         marginTop: '2rem'
     }
-} ) );
+}));
 
-const DefaultDashboard = () =>
-{
+const DefaultDashboard = () => {
 
     const classes = useStyles();
 

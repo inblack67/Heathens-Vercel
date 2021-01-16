@@ -1,7 +1,7 @@
 import { atom } from 'recoil';
-import { ISnackbarProps, IAuth, IChannel } from '../interfaces';
+import { ISnackbarProps } from '../interfaces';
 
-export const snackbarState = atom<ISnackbarProps>( {
+export const snackbarState = atom<ISnackbarProps>({
     key: 'snackbarState',
     default: {
         isActive: false,
@@ -10,14 +10,4 @@ export const snackbarState = atom<ISnackbarProps>( {
             type: null
         }
     }
-} );
-
-export const authState = atom<IAuth>( {
-    key: 'authState',
-    default: null
-} );
-
-export const channelState = atom<IChannel>( {
-    key: 'channelState',
-    default: null
-} );
+});

@@ -1,40 +1,22 @@
 import Container from '@material-ui/core/Container';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import CChannel from '../components/CChannel';
 import Layout from '../components/Layout';
 import { withApolloAuth } from '../src/apollo/auth';
-import { AUTH_HOMEPAGE } from '../src/constants';
-import { NewMessageDocument, useGetMyChannelQuery } from "../src/generated/graphql";
+import { useGetMyChannelQuery } from "../src/generated/graphql";
 import { channelState, snackbarState } from '../src/recoil/state';
 
 
-const Dashboard = () =>
-{
+const Dashboard = () => {
     const router = useRouter();
     const { loading, error, data } = useGetMyChannelQuery();
-    const [ _, setChannel ] = useRecoilState( channelState );
-    const [ snackbar, setSnackbar ] = useRecoilState( snackbarState );
+    const [ snackbar, setSnackbar ] = useRecoilState(snackbarState);
 
-    useEffect( () =>
-    {
-        if ( data )
-        {
-            const { id, users, name, desc } = data.getMyChannel;
-            setChannel( {
-                id,
-                users,
-                name, desc
-            } );
-        }
-    }, [ loading ] );
-
-    useEffect( () =>
-    {
-        if ( error )
-        {
-            setSnackbar( {
+    useEffect(() => {
+        if (error) {
+            setSnackbar({
                 ...snackbar,
                 isActive: true,
                 message: error.message,
@@ -42,13 +24,12 @@ const Dashboard = () =>
                     ...snackbar.severity,
                     type: 'error'
                 }
-            } );
-            if ( error.message.toLocaleLowerCase().includes( 'none' ) )
-            {
-                router.replace( '/channels' );
+            });
+            if (error.message.toLocaleLowerCase().includes('none')) {
+                router.replace('/channels');
             }
         }
-    }, [ error ] );
+    }, [ error ]);
 
     return (
         <Layout>
@@ -60,4 +41,4 @@ const Dashboard = () =>
 };
 
 
-export default withApolloAuth( { ssr: false } )( Dashboard );
+export default withApolloAuth({ ssr: false })(Dashboard);
