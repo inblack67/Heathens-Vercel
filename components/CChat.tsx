@@ -42,6 +42,9 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     },
     current: {
         color: 'red',
+    },
+    noData: {
+        marginTop: '1rem'
     }
 }));
 
@@ -55,7 +58,7 @@ interface IChatForm {
 
 const Chat: FC<ICChatBox> = ({ channelId }) => {
 
-    const { register, handleSubmit, errors } = useForm<IChatForm>();
+    const { register, handleSubmit, errors, reset } = useForm<IChatForm>();
 
     const [ snackbar, setSnackbar ] = useRecoilState(snackbarState);
 
@@ -121,6 +124,7 @@ const Chat: FC<ICChatBox> = ({ channelId }) => {
                 content
             }
         }).then(() => {
+            reset();
         }).catch(err => console.error(err));
     };
 
@@ -134,7 +138,7 @@ const Chat: FC<ICChatBox> = ({ channelId }) => {
                 <Grid item xs={ 12 }>
                     <Container>
                         <div ref={ messageRef } className={ classes.messageArea }>
-                            { data && data.getChannelMessages.length > 0 ? <Messages messages={ data.getChannelMessages } /> : <Typography variant='h6' align='center'>
+                            { data && data.getChannelMessages.length > 0 ? <Messages messages={ data.getChannelMessages } /> : <Typography className={ classes.noData } variant='h6' align='center'>
                                 No messages yet.
                             </Typography> }
                         </div>

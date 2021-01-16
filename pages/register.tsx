@@ -39,7 +39,7 @@ const CRegister = () => {
     const router = useRouter();
     const classes = useStyles();
 
-    const { register, handleSubmit, errors } = useForm<IRegister>();
+    const { register, handleSubmit, errors, reset } = useForm<IRegister>();
 
     const [ registerMutation, { loading, error, data } ] = useRegisterMutation();
 
@@ -73,6 +73,7 @@ const CRegister = () => {
                 recaptchaToken
             }
         }).then(() => {
+            reset();
             setSnackbar({
                 ...snackbar,
                 isActive: true,

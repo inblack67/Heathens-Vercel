@@ -39,7 +39,7 @@ const CLogin = () => {
     const router = useRouter();
     const classes = useStyles();
 
-    const { register, handleSubmit, errors } = useForm<ILogin>();
+    const { register, handleSubmit, errors, reset } = useForm<ILogin>();
 
     const [ loginMutation, { loading, error, data } ] = useLoginMutation();
 
@@ -74,6 +74,7 @@ const CLogin = () => {
                 recaptchaToken
             }
         }).then(() => {
+            reset();
             setSnackbar({
                 ...snackbar,
                 isActive: true,
