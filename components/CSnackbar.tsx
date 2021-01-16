@@ -27,7 +27,7 @@ const CSnackbar = () => {
 
     return (
         isActive ? <div>
-            <Snackbar open={ isActive } autoHideDuration={ 6000 } onClose={ handleClose }>
+            <Snackbar open={ isActive } autoHideDuration={ 4000 } onClose={ handleClose }>
                 <Alert onClose={ handleClose } severity={ severity?.type }>
                     { message }
                 </Alert>

@@ -1,7 +1,8 @@
 import { FC, useEffect, useRef } from 'react';
-import { createStyles, makeStyles, Theme, Paper, Grid, Divider, Typography, Container, Fab, FormControl, InputLabel, Input, FormHelperText } from '@material-ui/core';
+import { createStyles, makeStyles, Theme, Paper, Grid, Divider, Typography, Container, Fab, FormControl, InputLabel, Input, FormHelperText, Box } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 import SendIcon from '@material-ui/icons/Send';
-import { useGetChannelMessagesQuery, usePostMessageMutation, NewMessageDocument } from '../src/generated/graphql';
+import { useGetChannelMessagesQuery, usePostMessageMutation, NewMessageDocument, RemovedMessageDocument } from '../src/generated/graphql';
 import { useForm } from 'react-hook-form';
 import { useRecoilState } from "recoil";
 import { snackbarState } from "../src/recoil/state";
@@ -21,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         maxWidth: '100%',
         height: '100%',
         background: '#161710',
-        border: '1px solid red'
+        border: `1px solid ${ theme.palette.primary.main }`
     },
     textRight: {
         textAlign: 'right'
@@ -42,10 +43,15 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         textAlign: 'justify'
     },
     current: {
-        color: 'red',
+        color: theme.palette.success.main,
     },
     noData: {
         marginTop: '1rem'
+    },
+    alert: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 }));
 
@@ -81,7 +87,7 @@ const Chat: FC<ICChatBox> = ({ channelId }) => {
     });
 
     useEffect(() => {
-        const unsub = subscribeToMore({
+        subscribeToMore({
             document: NewMessageDocument,
             variables: {
                 channelId
@@ -96,10 +102,24 @@ const Chat: FC<ICChatBox> = ({ channelId }) => {
                 };
             }
         });
+    }, []);
 
-        return () => {
-            unsub();
-        };
+    useEffect(() => {
+        subscribeToMore({
+            document: RemovedMessageDocument,
+            variables: {
+                channelId
+            },
+            updateQuery: (prev, res: any) => {
+                if (!res.subscriptionData.data) {
+                    return prev;
+                }
+                return {
+                    ...prev,
+                    getChannelMessages: prev.getChannelMessages.filter(mess => mess.id !== res.subscriptionData.data.removedMessage.id)
+                };
+            }
+        });
     }, []);
 
     useEffect(() => {
@@ -142,9 +162,13 @@ const Chat: FC<ICChatBox> = ({ channelId }) => {
                 <Grid item xs={ 12 }>
                     <Container>
                         <div ref={ messageRef } className={ classes.messageArea }>
-                            { data && data.getChannelMessages.length > 0 ? <Messages messages={ data.getChannelMessages } /> : <Typography className={ classes.noData } variant='h6' align='center'>
-                                No messages yet.
-                            </Typography> }
+                            <Alert className={ `${ classes.noData } ${ classes.alert }` } severity='success'>
+                                Messages to this chat are end-to-end encrypted.
+                            </Alert>
+                            { data && data.getChannelMessages.length > 0 ? <Messages messages={ data.getChannelMessages } /> : <div className={ classes.textCenter }>
+                                <Alert className={ `${ classes.noData } ${ classes.alert }` } severity='warning'>
+                                    No messages yet.
+                            </Alert> </div> }
                         </div>
                     </Container>
                     <Divider />

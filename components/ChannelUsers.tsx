@@ -44,7 +44,7 @@ const ChannelUsers: FC<IUsers> = ({ channelId }) => {
     const getMeRes = useGetMeQuery();
 
     useEffect(() => {
-        const unsub1 = subscribeToMore({
+        subscribeToMore({
             document: JoinedChannelDocument,
             variables: {
                 channelId
@@ -60,14 +60,10 @@ const ChannelUsers: FC<IUsers> = ({ channelId }) => {
                 };
             }
         });
-
-        return () => {
-            return unsub1();
-        };
     }, []);
 
     useEffect(() => {
-        const unsub2 = subscribeToMore({
+        subscribeToMore({
             document: LeftChannelDocument,
             variables: {
                 channelId
@@ -83,10 +79,6 @@ const ChannelUsers: FC<IUsers> = ({ channelId }) => {
                 };
             }
         });
-
-        return () => {
-            unsub2();
-        };
     }, []);
 
     if (loading) {

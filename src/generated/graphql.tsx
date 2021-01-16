@@ -144,6 +144,7 @@ export type MutationDeleteMessageArgs = {
 export type Subscription = {
   __typename?: 'Subscription';
   newMessage: MessageEntity;
+  removedMessage: MessageEntity;
   newNotification: Scalars['String'];
   joinedChannel: UserEntity;
   leftChannel: UserEntity;
@@ -151,6 +152,11 @@ export type Subscription = {
 
 
 export type SubscriptionNewMessageArgs = {
+  channelId: Scalars['Float'];
+};
+
+
+export type SubscriptionRemovedMessageArgs = {
   channelId: Scalars['Float'];
 };
 
@@ -411,6 +417,23 @@ export type NewNotificationSubscriptionVariables = Exact<{
 export type NewNotificationSubscription = (
   { __typename?: 'Subscription' }
   & Pick<Subscription, 'newNotification'>
+);
+
+export type RemovedMessageSubscriptionVariables = Exact<{
+  channelId: Scalars['Float'];
+}>;
+
+
+export type RemovedMessageSubscription = (
+  { __typename?: 'Subscription' }
+  & { removedMessage: (
+    { __typename?: 'MessageEntity' }
+    & Pick<MessageEntity, 'content' | 'id' | 'createdAt'>
+    & { poster: (
+      { __typename?: 'UserEntity' }
+      & Pick<UserEntity, 'id' | 'username'>
+    ) }
+  ) }
 );
 
 
@@ -1051,3 +1074,38 @@ export function useNewNotificationSubscription(baseOptions: Apollo.SubscriptionH
       }
 export type NewNotificationSubscriptionHookResult = ReturnType<typeof useNewNotificationSubscription>;
 export type NewNotificationSubscriptionResult = Apollo.SubscriptionResult<NewNotificationSubscription>;
+export const RemovedMessageDocument = gql`
+    subscription RemovedMessage($channelId: Float!) {
+  removedMessage(channelId: $channelId) {
+    content
+    id
+    poster {
+      id
+      username
+    }
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useRemovedMessageSubscription__
+ *
+ * To run a query within a React component, call `useRemovedMessageSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useRemovedMessageSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRemovedMessageSubscription({
+ *   variables: {
+ *      channelId: // value for 'channelId'
+ *   },
+ * });
+ */
+export function useRemovedMessageSubscription(baseOptions: Apollo.SubscriptionHookOptions<RemovedMessageSubscription, RemovedMessageSubscriptionVariables>) {
+        return Apollo.useSubscription<RemovedMessageSubscription, RemovedMessageSubscriptionVariables>(RemovedMessageDocument, baseOptions);
+      }
+export type RemovedMessageSubscriptionHookResult = ReturnType<typeof useRemovedMessageSubscription>;
+export type RemovedMessageSubscriptionResult = Apollo.SubscriptionResult<RemovedMessageSubscription>;

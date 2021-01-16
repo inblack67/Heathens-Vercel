@@ -1,0 +1,11 @@
+subscription RemovedMessage($channelId: Float!){
+  removedMessage(channelId: $channelId){
+    content
+    id
+    poster{
+      id
+      username
+    }
+    createdAt
+  }
+}
