@@ -72,6 +72,7 @@ export type MessageEntity = {
   __typename?: 'MessageEntity';
   id: Scalars['Float'];
   content: Scalars['String'];
+  ivString: Scalars['String'];
   type: Scalars['String'];
   poster: UserEntity;
   channel: ChannelEntity;

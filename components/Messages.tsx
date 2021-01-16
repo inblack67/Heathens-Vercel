@@ -1,6 +1,7 @@
 import { createStyles, Grid, List, ListItem, ListItemText, makeStyles, Theme } from "@material-ui/core";
 import { FC } from "react";
 import { RenderMarkdown } from 'use-syntaxer';
+import { decryptMe } from "../src/encryption";
 import { MessageEntity, useGetMeQuery, UserEntity } from "../src/generated/graphql";
 import Preloader from "./Preloader";
 
@@ -60,7 +61,7 @@ const Messages: FC<IMessages> = ({ messages }) => {
                 <Grid container >
                     <Grid item xs={ 12 }>
                         <ListItemText className={ classes.message }>
-                            <RenderMarkdown code={ message.content } />
+                            <RenderMarkdown code={ decryptMe(message.content) } />
                         </ListItemText>
                     </Grid>
                     <Grid item xs={ 12 }>

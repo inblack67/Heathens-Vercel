@@ -7,6 +7,7 @@ import { useRecoilState } from "recoil";
 import { snackbarState } from "../src/recoil/state";
 import Preloader from "./Preloader";
 import Messages from './Messages';
+import { encryptMe } from '../src/encryption';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     messageArea: {
@@ -118,10 +119,13 @@ const Chat: FC<ICChatBox> = ({ channelId }) => {
     const classes = useStyles();
 
     const postMessage = ({ content }: IChatForm) => {
+
+        const encryptedContent = encryptMe(content);
+
         postMessageMutation({
             variables: {
                 channelId,
-                content
+                content: encryptedContent
             }
         }).then(() => {
             reset();

@@ -1,7 +1,7 @@
 import React, { FC, useEffect } from 'react';
 import { createStyles, Theme, makeStyles, List, ListItem, ListItemText, ListItemAvatar, Avatar, Typography } from '@material-ui/core';
-import ImageIcon from '@material-ui/icons/Image';
-import { useGetChannelUsersQuery, JoinedChannelDocument, LeftChannelDocument } from '../src/generated/graphql';
+import CodeIcon from '@material-ui/icons/Code';
+import { useGetChannelUsersQuery, JoinedChannelDocument, LeftChannelDocument, useGetMeQuery } from '../src/generated/graphql';
 import Preloader from './Preloader';
 import clsx from 'clsx';
 
@@ -15,6 +15,17 @@ const useStyles = makeStyles((theme: Theme) =>
         verticalMargin: {
             margin: '0.5rem 0 0.5rem 0'
         },
+        blackBg: {
+            backgroundColor: 'black'
+        },
+        primaryBg: {
+            backgroundColor: theme.palette.primary.main,
+            color: 'white'
+        },
+        secondaryBg: {
+            backgroundColor: theme.palette.secondary.main,
+            color: 'white'
+        }
     }),
 );
 
@@ -30,6 +41,7 @@ const ChannelUsers: FC<IUsers> = ({ channelId }) => {
         },
         fetchPolicy: 'network-only'
     });
+    const getMeRes = useGetMeQuery();
 
     useEffect(() => {
         const unsub1 = subscribeToMore({
@@ -83,10 +95,10 @@ const ChannelUsers: FC<IUsers> = ({ channelId }) => {
 
     return (
         <List >
-            {data && data.getChannelUsers.length > 0 ? data.getChannelUsers.map(user => <ListItem className={ clsx(classes.root, classes.verticalMargin) } key={ user.id }>
+            {data && data.getChannelUsers.length > 0 ? data.getChannelUsers.map(user => <ListItem className={ clsx(classes.root, classes.verticalMargin, classes.blackBg) } key={ user.id }>
                 <ListItemAvatar>
-                    <Avatar>
-                        <ImageIcon />
+                    <Avatar className={ getMeRes.data && getMeRes.data.getMe.id === user.id ? classes.primaryBg : classes.secondaryBg }>
+                        <CodeIcon />
                     </Avatar>
                 </ListItemAvatar>
                 <ListItemText primary={ user.username } />

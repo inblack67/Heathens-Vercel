@@ -5,7 +5,7 @@
 - Functionalities
     - Auth
     - Channels
-    - Messages
+    - Messages => End-To-End Encrypted
 
 - Tech Stack
     - Next.js
@@ -19,6 +19,7 @@
     - Express
     - TypeScript
     - Redis
+    - Crypto
     - Material-UI
     - Docker
     - Docker Compose
@@ -30,7 +31,3 @@
     - Recaptcha
 
 - [Deployed](https://app.21heathens.tk)
-
-- Coming Soon
-    - Image Uploads
-    - End-To-End Encryption
