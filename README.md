@@ -29,5 +29,6 @@
     - DigitalOcean
     - Vercel
     - Recaptcha
+    - PWA
 
 - [Deployed](https://app.21heathens.tk)
