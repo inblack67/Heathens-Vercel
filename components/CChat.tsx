@@ -80,11 +80,11 @@ const Chat: FC<ICChatBox> = ({ channelId }) => {
 
     const messageRef = useRef<HTMLDivElement>();
 
-    useEffect(() => {
-        if (messageRef.current) {
-            messageRef.current.scrollTop = messageRef.current.scrollHeight;
-        }
-    });
+    // useEffect(() => {
+    //     if (messageRef.current) {
+    //         messageRef.current.scrollTop = messageRef.current.scrollHeight;
+    //     }
+    // });
 
     useEffect(() => {
         subscribeToMore({
