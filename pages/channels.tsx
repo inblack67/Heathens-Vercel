@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import Preloader from "../components/Preloader";
 import { useGetChannelsQuery, useGetMyChannelQuery, useJoinChannelMutation } from "../src/generated/graphql";
-import { List, ListItem, makeStyles, createStyles, Theme, ListItemText, ListItemIcon } from "@material-ui/core";
+import { List, ListItem, makeStyles, createStyles, Theme, ListItemText, ListItemIcon, Container, Button } from "@material-ui/core";
 import DevicesIcon from '@material-ui/icons/Devices';
 import AcUnitIcon from '@material-ui/icons/AcUnit';
 import { useRecoilState } from "recoil";
@@ -26,6 +26,13 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     },
     current: {
         color: theme.palette.secondary.main
+    },
+    channelContainer: {
+        marginTop: '5rem',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 }));
 
@@ -94,17 +101,21 @@ const CChannels: FC<ICChannels> = () => {
 
     return (
         <Layout>
-            <List>
-                { data ? data.getChannels.map((channel) => (
-                    <ListItem disabled={ channel.id === channelId } button key={ channel.id }>
-                        <ListItemIcon className={ channel.id === channelId ? classes.current : null }><DevicesIcon /></ListItemIcon>
-                        <ListItemText className={ channel.id === channelId ? classes.current : null } onClick={ handleChannelClick(channel.id, channel.name) } primary={ channel.name } />
-                    </ListItem>
-                )) : <ListItem button>
-                        <ListItemIcon><AcUnitIcon /></ListItemIcon>
-                        No channels yet
-                </ListItem> }
-            </List>
+            <Container className={ classes.channelContainer }>
+                <Button variant='contained' color='secondary'>
+                    Channels
+                </Button>
+                <List>
+                    { data && data.getChannels.length > 0 ? data.getChannels.map((channel) => (
+                        <ListItem onClick={ handleChannelClick(channel.id, channel.name) } disabled={ channel.id === channelId } button key={ channel.id }>
+                            <ListItemIcon className={ channel.id === channelId ? classes.current : null }><DevicesIcon /></ListItemIcon>
+                            <ListItemText className={ channel.id === channelId ? classes.current : null } primary={ channel.name } />
+                        </ListItem>
+                    )) : <Button variant='contained' color='secondary'>
+                            No channels yet
+                </Button> }
+                </List>
+            </Container>
         </Layout>
     );
 };
