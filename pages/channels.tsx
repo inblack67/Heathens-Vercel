@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import Preloader from "../components/Preloader";
 import { useGetChannelsQuery, useGetMyChannelQuery, useJoinChannelMutation } from "../src/generated/graphql";
-import { List, ListItem, makeStyles, createStyles, Theme, ListItemText, ListItemIcon, Container, Button } from "@material-ui/core";
+import { List, ListItem, makeStyles, createStyles, Theme, ListItemText, ListItemIcon, Container, Button, Grid } from "@material-ui/core";
 import DevicesIcon from '@material-ui/icons/Devices';
 import AcUnitIcon from '@material-ui/icons/AcUnit';
 import { useRecoilState } from "recoil";
@@ -21,6 +21,19 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     channel: {
 
     },
+    channelList: {
+        marginTop: '1rem'
+    },
+    channelItemContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    channelItem: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     textCenter: {
         textAlign: 'center'
     },
@@ -28,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         color: theme.palette.secondary.main
     },
     channelContainer: {
-        marginTop: '5rem',
+        marginTop: '3rem',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -105,15 +118,21 @@ const CChannels: FC<ICChannels> = () => {
                 <Button variant='contained' color='secondary'>
                     Channels
                 </Button>
-                <List>
-                    { data && data.getChannels.length > 0 ? data.getChannels.map((channel) => (
-                        <ListItem onClick={ handleChannelClick(channel.id, channel.name) } disabled={ channel.id === channelId } button key={ channel.id }>
-                            <ListItemIcon className={ channel.id === channelId ? classes.current : null }><DevicesIcon /></ListItemIcon>
-                            <ListItemText className={ channel.id === channelId ? classes.current : null } primary={ channel.name } />
-                        </ListItem>
-                    )) : <Button variant='contained' color='secondary'>
-                            No channels yet
+                <List className={ classes.channelList }>
+                    <Grid container spacing={ 8 }>
+                        { data && data.getChannels.length > 0 ? data.getChannels.map((channel) => (
+                            <Grid item xs={ 12 } md={ 6 }>
+                                <ListItem className={ classes.channelItem } onClick={ handleChannelClick(channel.id, channel.name) } disabled={ channel.id === channelId } button key={ channel.id }>
+                                    <div className={ classes.channelItemContainer }>
+                                        <ListItemIcon className={ channel.id === channelId ? classes.current : null }><DevicesIcon /></ListItemIcon>
+                                        <ListItemText className={ channel.id === channelId ? classes.current : null } primary={ channel.name } />
+                                    </div>
+                                </ListItem>
+                            </Grid>
+                        )) : <Button variant='contained' color='secondary'>
+                                No channels yet
                 </Button> }
+                    </Grid>
                 </List>
             </Container>
         </Layout>
