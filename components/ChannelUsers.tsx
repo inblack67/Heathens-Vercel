@@ -1,5 +1,5 @@
 import React, { FC, useEffect } from 'react';
-import { createStyles, Theme, makeStyles, List, ListItem, ListItemText, ListItemAvatar, Avatar, Typography } from '@material-ui/core';
+import { createStyles, Theme, makeStyles, List, ListItem, ListItemText, ListItemAvatar, Avatar, Typography, Paper, Grid } from '@material-ui/core';
 import CodeIcon from '@material-ui/icons/Code';
 import { useGetChannelUsersQuery, JoinedChannelDocument, LeftChannelDocument, useGetMeQuery } from '../src/generated/graphql';
 import Preloader from './Preloader';
@@ -25,7 +25,10 @@ const useStyles = makeStyles((theme: Theme) =>
         secondaryBg: {
             backgroundColor: theme.palette.secondary.main,
             color: 'white'
-        }
+        },
+        userItem: {
+            background: '#161710'
+        },
     }),
 );
 
@@ -86,8 +89,8 @@ const ChannelUsers: FC<IUsers> = ({ channelId }) => {
     }
 
     return (
-        <List >
-            {data && data.getChannelUsers.length > 0 ? data.getChannelUsers.map(user => <ListItem className={ clsx(classes.root, classes.verticalMargin, classes.blackBg) } key={ user.id }>
+        <List>
+            { data && data.getChannelUsers.length > 0 ? data.getChannelUsers.map(user => <ListItem className={ clsx(classes.root, classes.verticalMargin, classes.userItem) } key={ user.id }>
                 <ListItemAvatar>
                     <Avatar className={ getMeRes.data && getMeRes.data.getMe.id === user.id ? classes.primaryBg : classes.secondaryBg }>
                         <CodeIcon />

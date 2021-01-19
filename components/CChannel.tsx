@@ -1,15 +1,26 @@
-import { Button, createStyles, Grid, makeStyles, Theme, Typography } from "@material-ui/core";
+import { Button, createStyles, Grid, makeStyles, Paper, Theme, Typography } from "@material-ui/core";
 import { useRouter } from "next/router";
 import { FC } from "react";
 import { useRecoilState } from "recoil";
 import { ChannelEntity, useLeaveChannelMutation, UserEntity } from "../src/generated/graphql";
 import { snackbarState } from "../src/recoil/state";
 import CChat from "./CChat";
-import ChannelUsers from "./ChannelUsers";
+import CSingleChannel from "./CSingleChannel";
+import Preloader from "./Preloader";
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     verticalMargin: {
         margin: '1rem 0 1rem 0'
+    },
+    messageArea: {
+        height: '65vh',
+        overflowY: 'auto',
+    },
+    chatSection: {
+        maxWidth: '100%',
+        height: '100%',
+        background: '#161710',
+        border: `1px solid ${ theme.palette.primary.main }`
     },
 }));
 
@@ -58,29 +69,33 @@ const CChannel: FC<ICChannel> = ({ channel }) => {
 
     return (
         <div>
-            {channel ? <Grid container >
+            {channel ? <Grid container spacing={ 8 }>
                 <Grid item xs={ 12 } md={ 6 } >
-                    <Typography variant='h5' color='secondary'>
-                        { channel.name }
-                    </Typography>
-                    <Typography variant='h6'>
-                        { channel.desc }
-                    </Typography>
-                    <Button onClick={ fireLeaveChannel } className={ classes.verticalMargin } variant='contained' color='secondary'>Leave Channel</Button>
-                    <Typography variant='h6'>
-                        Active Devs
-                        </Typography>
-                    <div>
-                        <ChannelUsers channelId={ channel.id } />
-                    </div>
-
+                    <CSingleChannel channel={ channel } />
                 </Grid>
                 <Grid item xs={ 12 } md={ 6 }>
                     <CChat channelId={ channel.id } />
                 </Grid>
-            </Grid> : null }
+            </Grid> : <Preloader /> }
         </div>
     );
 };
 
 export default CChannel;
+
+
+/*
+ <Typography variant='h5' color='secondary'>
+                                            { channel.name }
+                                        </Typography>
+                                        <Typography variant='h6'>
+                                            { channel.desc }
+                                        </Typography>
+                                        <Button onClick={ fireLeaveChannel } className={ classes.verticalMargin } variant='contained' color='secondary'>Leave Channel</Button>
+                                        <Typography variant='h6'>
+                                            Active Devs
+                                     </Typography>
+                                        <div>
+                                            <ChannelUsers channelId={ channel.id } />
+                                        </div>
+*/

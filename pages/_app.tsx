@@ -5,8 +5,10 @@ import { theme } from '../styles/styles';
 import CSnackbar from '../components/CSnackbar';
 import { RecoilRoot } from 'recoil';
 
-console.log = function () { };
-console.error = function () { };
+if (process.env.NEXT_PUBLIC_NODE_ENV) {
+  console.log = function () { };
+  console.error = function () { };
+}
 
 function MyApp ({ Component, pageProps }) {
   useEffect(() => {
