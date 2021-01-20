@@ -8,11 +8,11 @@ import { ChannelEntity, useLeaveChannelMutation, UserEntity } from "../src/gener
 import { snackbarState } from '../src/recoil/state';
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
-    messageArea: {
+    myChannelArea: {
         height: '80vh',
         overflowY: 'auto',
     },
-    chatSection: {
+    myChannelSection: {
         maxWidth: '100%',
         height: '100%',
         background: '#161710',
@@ -21,10 +21,10 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     verticalMargin: {
         margin: '1rem 0 1rem 0'
     },
-    noData: {
+    myChannelNoData: {
         marginTop: '1rem'
     },
-    alert: {
+    zalert: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
@@ -71,11 +71,11 @@ const Chat: FC<ICChannelBox> = ({ channel }) => {
 
     return (
         <div>
-            <Grid container component={ Paper } className={ classes.chatSection }>
+            <Grid container component={ Paper } className={ classes.myChannelSection }>
                 <Grid item xs={ 12 }>
                     <Container>
-                        <div className={ classes.messageArea }>
-                            <Alert className={ `${ classes.noData } ${ classes.alert }` } severity='info'>
+                        <div className={ classes.myChannelArea }>
+                            <Alert className={ `${ classes.myChannelNoData } ${ classes.zalert }` } severity='info'>
                                 Channel Details
                             </Alert>
                             <Typography variant='h5' color='secondary'>

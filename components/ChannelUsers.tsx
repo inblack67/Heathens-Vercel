@@ -84,12 +84,8 @@ const ChannelUsers: FC<IUsers> = ({ channelId }) => {
         });
     }, []);
 
-    if (loading) {
-        return <Preloader />;
-    }
-
     return (
-        <List>
+        !loading ? <List>
             { data && data.getChannelUsers.length > 0 ? data.getChannelUsers.map(user => <ListItem className={ clsx(classes.root, classes.verticalMargin, classes.userItem) } key={ user.id }>
                 <ListItemAvatar>
                     <Avatar className={ getMeRes.data && getMeRes.data.getMe.id === user.id ? classes.primaryBg : classes.secondaryBg }>
@@ -99,7 +95,7 @@ const ChannelUsers: FC<IUsers> = ({ channelId }) => {
                 <ListItemText primary={ user.username } />
             </ListItem>) : <Typography align='center' variant='h6' color='secondary'>
                     No users yet</Typography> }
-        </List>
+        </List> : null
     );
 };
 

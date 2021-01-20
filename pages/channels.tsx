@@ -11,9 +11,6 @@ import Alert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     channelsContainer: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
         marginTop: '3rem'
     },
     channelArea: {
@@ -29,6 +26,11 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     noChannels: {
         marginTop: '1rem'
     },
+    xalert: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
 }));
 
 interface ICChannels {
@@ -90,39 +92,40 @@ const CChannels: FC<ICChannels> = () => {
         }).catch(err => console.error(err));
     };
 
-    if (loading) {
-        return <Preloader />;
-    }
-
     return (
         <Layout>
-            <div className={ classes.channelsContainer }>
-                <div>
-                    <Alert className={ `${ classes.noChannels }` } severity='info'>
-                        Active Channels
+            {loading ? <Preloader /> : null }
+            <Container>
+                <div className={ classes.channelsContainer }>
+                    <div>
+                        <Alert className={ `${ classes.noChannels }` } severity='info'>
+                            Active Channels
                     </Alert>
-                    <Grid container component={ Paper } className={ classes.channelSection }>
-                        <Grid item xs={ 12 }>
-                            <Container>
-                                <div className={ classes.channelArea }>
-                                    { data && data.getChannels.length > 0 ? data.getChannels.map(channel => <div key={ channel.id }>
-                                        <Alert severity='info'>
-                                            { channel.name }
-                                            <p>
-                                                { channel.desc }
-                                            </p>
-                                            <Button onClick={ handleChannelClick(channel.id, channel.name) } disabled={ channel.id === channelId } color='secondary' variant='contained'>
-                                                Join
+                        <Grid container component={ Paper } className={ classes.channelSection }>
+                            <Grid item xs={ 12 }>
+                                <Container>
+                                    <div className={ classes.channelArea }>
+                                        { data && data.getChannels.length > 0 ? data.getChannels.map(channel => <div key={ channel.id }>
+                                            <Alert severity='info'>
+                                                { channel.name }
+                                                <p>
+                                                    { channel.desc }
+                                                </p>
+                                                <Button onClick={ handleChannelClick(channel.id, channel.name) } disabled={ channel.id === channelId } color='secondary' variant='contained'>
+                                                    Join
                                             </Button>
-                                        </Alert>
-                                        <Divider />
-                                    </div>) : null }
-                                </div>
-                            </Container>
+                                            </Alert>
+                                            <Divider />
+                                        </div>) : <Alert className={ `${ classes.noChannels } ${ classes.xalert }` } severity='warning'>
+                                                No channels yet.
+                                        </Alert> }
+                                    </div>
+                                </Container>
+                            </Grid>
                         </Grid>
-                    </Grid>
+                    </div>
                 </div>
-            </div>
+            </Container>
         </Layout>
     );
 };

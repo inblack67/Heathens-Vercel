@@ -1,51 +1,47 @@
 import { SState } from "./types";
 
 const severityTypes = [ 'error', 'warning', 'info', 'success' ] as const;
-export interface ISeverities
-{
+export interface ISeverities {
     type: typeof severityTypes[ number ];
 }
 
-export interface ISnackbarProps
-{
+export interface ISnackbarProps {
     severity: ISeverities;
     message: string;
     isActive: boolean;
 }
 
-export interface ISContext extends SState
-{
-    setSnackbar: ( _: SState ) => void;
+export interface ISContext extends SState {
+    setSnackbar: (_: SState) => void;
 };
 
-export interface ILogin
-{
+export interface ILogin {
     username: string,
     password: string;
 }
 
-export interface IRegister
-{
+export interface IResetPassword {
+    newPassword: string,
+    confirmPassword: string;
+}
+
+export interface IRegister {
     name: string;
     email: string;
     username: string,
     password: string;
 }
 
-
-export interface IPostMessage
-{
+export interface IPostMessage {
     content: string;
 }
 
-export interface IAuth
-{
+export interface IAuth {
     username: String;
     id: Number | String;
 }
 
-export interface IChannel
-{
+export interface IChannel {
     id: number;
     name: string;
     desc: string;

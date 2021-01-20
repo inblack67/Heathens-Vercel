@@ -1,41 +1,57 @@
-import { Button, createStyles, makeStyles, Theme } from "@material-ui/core";
-import Alert from "@material-ui/lab/Alert";
-import { Container } from "next/app";
-import { useRouter } from "next/router";
-import Layout from "../../components/Layout";
-import Preloader from "../../components/Preloader";
-import { useResetPasswordMutation } from '../../src/generated/graphql';
+import { FormControl, Input, InputLabel, FormHelperText, makeStyles, createStyles, Theme, Grid, Button, Container } from '@material-ui/core';
+import CodeIcon from '@material-ui/icons/Code';
+import { useRouter } from 'next/router';
+import { useEffect, useRef } from 'react';
+import { useForm } from 'react-hook-form';
+import { useRecoilState } from 'recoil';
+import Layout from '../../components/Layout';
+import Preloader from '../../components/Preloader';
+import { withApollo } from '../../src/apollo';
+import { AUTH_HOMEPAGE } from '../../src/constants';
+import { useLoginMutation, useResetPasswordMutation } from '../../src/generated/graphql';
+import { ILogin, IResetPassword } from '../../src/interfaces';
+import { snackbarState } from '../../src/recoil/state';
+import { theme } from '../../styles/styles';
 import NextLink from 'next/link';
-import { useRecoilState } from "recoil";
-import { snackbarState } from "../../src/recoil/state";
-import { withApolloAuth } from "../../src/apollo/auth";
-import { useEffect } from "react";
+import { withApolloAuth } from '../../src/apollo/auth';
+import { NextPageContext } from 'next';
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
+const useStyles = makeStyles((_: Theme) => createStyles({
     root: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        flexGrow: 1,
         marginTop: theme.spacing(8),
     },
-    dflex: {
+    btns: {
+        marginTop: theme.spacing(2),
+    },
+    title: {
+        marginBottom: theme.spacing(2)
+    },
+    marginAuto: {
+        margin: 'auto'
+    },
+    submit: {
+        marginTop: theme.spacing(2)
+    },
+    horizontalMargin: {
+        margin: '0 1rem 0 1rem'
+    },
+    loginLinks: {
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center'
     },
-    yverticalMargin: {
-        margin: '1rem 0 1rem 0'
+    reset: {
+        marginTop: '1rem'
     }
 }));
 
-const ResetPassword = () => {
-
+const CResetPassword = ({ token }) => {
     const router = useRouter();
     const classes = useStyles();
 
-    const { token } = router.query;
-    const [ resetPassword, { loading, data, error } ] = useResetPasswordMutation();
+    const { register, handleSubmit, errors, reset } = useForm<IResetPassword>();
+
+    const [ resetPasswordMutation, { loading, error } ] = useResetPasswordMutation();
 
     const [ snackbar, setSnackbar ] = useRecoilState(snackbarState);
 
@@ -54,13 +70,29 @@ const ResetPassword = () => {
         }
     }, [ error ]);
 
-    const resetPasswordSubmit = data => {
-        resetPassword({
+    const handlePasswordReset = async ({ newPassword, confirmPassword }: IResetPassword) => {
+
+        if (newPassword !== confirmPassword) {
+            reset();
+            setSnackbar({
+                ...snackbar,
+                isActive: true,
+                message: 'Passwords Do Not Match',
+                severity: {
+                    ...snackbar.severity,
+                    type: 'error',
+                }
+            });
+            return;
+        }
+
+        resetPasswordMutation({
             variables: {
-                token: token as string,
-                newPassword: 'ok'
+                newPassword,
+                token
             }
         }).then(() => {
+            reset();
             setSnackbar({
                 ...snackbar,
                 isActive: true,
@@ -70,40 +102,100 @@ const ResetPassword = () => {
                     type: 'success',
                 }
             });
+
+            router.push('/login');
+
         }).catch(err => console.error(err));
     };
 
-    if (loading) {
-        return <Preloader />;
-    }
-
     return (
         <Layout>
+            {loading ? <Preloader /> : null }
             <div className={ classes.root }>
                 <Container>
-                    { data ? <div className={ classes.dflex }>
-                        <Alert severity='success'>
-                            Your Email has been successfully verified.
-                            </Alert>
-                        <NextLink href='/login' passHref>
-                            <Button className={ classes.yverticalMargin } variant='contained' color='primary'>
-                                Login
-                        </Button>
-                        </NextLink>
-                    </div> : <div className={ classes.dflex }>
-                            <Alert severity='error'>
-                                Something Went Wrong.
-                            </Alert>
-                            <NextLink href='/' passHref>
-                                <Button className={ classes.yverticalMargin } variant='contained' color='primary'>
-                                    Back Home
-                                    </Button>
-                            </NextLink>
-                        </div> }
+                    <Grid container spacing={ 2 } alignItems='center' justify='center' >
+                        <Grid item lg={ 6 } xs={ 12 }>
+                            <div className={ classes.loginLinks }>
+                                <div>
+                                    <Button startIcon={ <CodeIcon /> }>Reset Your Password Password</Button>
+                                </div>
+                                <div>
+                                </div>
+                            </div>
+                        </Grid>
+                        <Grid item lg={ 6 } xs={ 12 }>
+                            <form onSubmit={ handleSubmit(handlePasswordReset) } autoComplete='off'>
+                                <FormControl error={ errors.newPassword ? true : false }
+                                    fullWidth>
+                                    <InputLabel htmlFor="newPassword"> New Password</InputLabel>
+                                    <Input type='password' name='newPassword' id="newPassword" inputRef={ register({
+                                        required: 'Password is required',
+                                        maxLength: {
+                                            value: 30,
+                                            message: 'Password cannot exceed 30 chars'
+                                        },
+                                        minLength: {
+                                            value: 8,
+                                            message: 'Password must be atleast 8 chars long'
+                                        },
+                                        validate: value => {
+                                            return (
+                                                [ /[a-z]/, /[A-Z]/, /[0-9]/, /[^a-zA-Z0-9]/ ].every((pattern) =>
+                                                    pattern.test(value)
+                                                ) || "Password must include lower, upper, number, and special chars"
+                                            );
+                                        },
+                                    }) } />
+                                    { errors.newPassword ? <FormHelperText
+                                        error
+                                        id="newPassword-helper-text">{ errors.newPassword.message }
+                                    </FormHelperText> : <FormHelperText
+                                        id="newPassword-helper-text">What is your new dirty little secret?</FormHelperText> }
+                                </FormControl>
+                                <FormControl error={ errors.confirmPassword ? true : false }
+                                    fullWidth>
+                                    <InputLabel htmlFor="confirmPassword"> Confirm Password</InputLabel>
+                                    <Input type='password' name='confirmPassword' id="confirmPassword" inputRef={ register({
+                                        required: 'Password Confirmation is required',
+                                        maxLength: {
+                                            value: 30,
+                                            message: 'Password cannot exceed 30 chars'
+                                        },
+                                        minLength: {
+                                            value: 8,
+                                            message: 'Password must be atleast 8 chars long'
+                                        },
+                                        validate: value => {
+                                            return (
+                                                [ /[a-z]/, /[A-Z]/, /[0-9]/, /[^a-zA-Z0-9]/ ].every((pattern) =>
+                                                    pattern.test(value)
+                                                ) || "Password must include lower, upper, number, and special chars"
+                                            );
+                                        },
+                                    }) } />
+                                    { errors.confirmPassword ? <FormHelperText
+                                        error
+                                        id="confirmPassword-helper-text">{ errors.confirmPassword.message }
+                                    </FormHelperText> : <FormHelperText
+                                        id="confirmPassword-helper-text">What don't you confirm it?</FormHelperText> }
+                                </FormControl>
+                                <Button type='submit' className={ classes.submit } variant='contained' color='primary'>
+                                    Reset
+                                </Button>
+                            </form>
+                        </Grid>
+                    </Grid>
                 </Container>
             </div>
         </Layout>
     );
 };
 
-export default withApolloAuth({ ssr: false })(ResetPassword); 
+export const getServerSideProps = async (ctx: NextPageContext) => {
+    const { token } = ctx.query;
+    return {
+        props: { token }
+    };
+};
+
+export default withApolloAuth({ ssr: false })(CResetPassword); 

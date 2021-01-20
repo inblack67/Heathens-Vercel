@@ -32,6 +32,16 @@ const useStyles = makeStyles((_: Theme) => createStyles({
     },
     submit: {
         marginTop: theme.spacing(2)
+    },
+    horizontalMargin: {
+        margin: '0 1rem 0 1rem'
+    },
+    loginLinks: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    reset: {
+        marginTop: '1rem'
     }
 }));
 
@@ -90,22 +100,25 @@ const CLogin = () => {
         }).catch(err => console.error(err));
     };
 
-    if (loading) {
-        return <Preloader />;
-    }
-
     return (
         <Layout>
+            {loading ? <Preloader /> : null }
             <div className={ classes.root }>
                 <Container>
                     <Grid container spacing={ 2 } alignItems='center' justify='center' >
                         <Grid item lg={ 6 } xs={ 12 }>
-                            <Button size='large' startIcon={ <CodeIcon /> }>Log Back In</Button>
-                            <NextLink passHref href='/register'>
-                                <Button variant='contained' color='secondary'>
-                                    Register
-                                </Button>
-                            </NextLink>
+                            <div className={ classes.loginLinks }>
+                                <div>
+                                    <NextLink href='/register' passHref>
+                                        <Button startIcon={ <CodeIcon /> }>Register</Button>
+                                    </NextLink>
+                                    <NextLink passHref href='/reset-password'>
+                                        <Button color='secondary' className={ classes.horizontalMargin } startIcon={ <CodeIcon /> }>Reset Password</Button>
+                                    </NextLink>
+                                </div>
+                                <div>
+                                </div>
+                            </div>
                         </Grid>
                         <Grid item lg={ 6 } xs={ 12 }>
                             <form onSubmit={ handleSubmit(handleLogin) } autoComplete='off'>
