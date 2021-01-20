@@ -10,27 +10,25 @@ import { withApolloAuth } from "../src/apollo/auth";
 import Alert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
-    root: {
+    channelsContainer: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: '3rem'
     },
-    messageArea: {
+    channelArea: {
         height: '65vh',
         overflowY: 'auto',
     },
-    chatSection: {
+    channelSection: {
         maxWidth: '100%',
         height: '100%',
         background: 'rgb(3, 14, 24)',
         border: `1px solid ${ theme.palette.primary.main }`
     },
-    noData: {
+    noChannels: {
         marginTop: '1rem'
     },
-    alert: {
-    }
 }));
 
 interface ICChannels {
@@ -98,15 +96,15 @@ const CChannels: FC<ICChannels> = () => {
 
     return (
         <Layout>
-            <div className={ classes.root }>
+            <div className={ classes.channelsContainer }>
                 <div>
-                    <Alert className={ `${ classes.noData } ${ classes.alert }` } severity='info'>
+                    <Alert className={ `${ classes.noChannels }` } severity='info'>
                         Active Channels
                     </Alert>
-                    <Grid container component={ Paper } className={ classes.chatSection }>
+                    <Grid container component={ Paper } className={ classes.channelSection }>
                         <Grid item xs={ 12 }>
                             <Container>
-                                <div className={ classes.messageArea }>
+                                <div className={ classes.channelArea }>
                                     { data && data.getChannels.length > 0 ? data.getChannels.map(channel => <div key={ channel.id }>
                                         <Alert severity='info'>
                                             { channel.name }

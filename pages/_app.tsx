@@ -5,7 +5,7 @@ import { theme } from '../styles/styles';
 import CSnackbar from '../components/CSnackbar';
 import { RecoilRoot } from 'recoil';
 
-if (process.env.NEXT_PUBLIC_NODE_ENV) {
+if (process.env.NEXT_PUBLIC_NODE_ENV === 'production') {
   console.log = function () { };
   console.error = function () { };
 }

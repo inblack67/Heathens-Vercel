@@ -59,7 +59,6 @@ const CRegister = () => {
                     type: 'error',
                 }
             });
-
         }
     }, [ error ]);
 
@@ -77,16 +76,12 @@ const CRegister = () => {
             setSnackbar({
                 ...snackbar,
                 isActive: true,
-                message: 'Registered!',
+                message: 'Verify Email => Sent To Your Email Address',
                 severity: {
                     ...snackbar.severity,
-                    type: 'success',
+                    type: 'info',
                 }
             });
-
-            router.push(AUTH_HOMEPAGE);
-
-
         }).catch(err => console.error(err));
     };
 
