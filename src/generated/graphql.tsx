@@ -92,11 +92,13 @@ export type Mutation = {
 
 
 export type MutationForgotPasswordArgs = {
+  recaptchaToken?: Maybe<Scalars['String']>;
   email: Scalars['String'];
 };
 
 
 export type MutationResetPasswordArgs = {
+  recaptchaToken?: Maybe<Scalars['String']>;
   newPassword: Scalars['String'];
   token: Scalars['String'];
 };
@@ -208,6 +210,7 @@ export type DeleteUserMutation = (
 
 export type ForgotPasswordMutationVariables = Exact<{
   email: Scalars['String'];
+  recaptchaToken: Scalars['String'];
 }>;
 
 
@@ -293,6 +296,7 @@ export type RegisterMutation = (
 export type ResetPasswordMutationVariables = Exact<{
   newPassword: Scalars['String'];
   token: Scalars['String'];
+  recaptchaToken: Scalars['String'];
 }>;
 
 
@@ -541,8 +545,8 @@ export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutati
 export type DeleteUserMutationResult = Apollo.MutationResult<DeleteUserMutation>;
 export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<DeleteUserMutation, DeleteUserMutationVariables>;
 export const ForgotPasswordDocument = gql`
-    mutation ForgotPassword($email: String!) {
-  forgotPassword(email: $email)
+    mutation ForgotPassword($email: String!, $recaptchaToken: String!) {
+  forgotPassword(email: $email, recaptchaToken: $recaptchaToken)
 }
     `;
 export type ForgotPasswordMutationFn = Apollo.MutationFunction<ForgotPasswordMutation, ForgotPasswordMutationVariables>;
@@ -561,6 +565,7 @@ export type ForgotPasswordMutationFn = Apollo.MutationFunction<ForgotPasswordMut
  * const [forgotPasswordMutation, { data, loading, error }] = useForgotPasswordMutation({
  *   variables: {
  *      email: // value for 'email'
+ *      recaptchaToken: // value for 'recaptchaToken'
  *   },
  * });
  */
@@ -773,8 +778,12 @@ export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const ResetPasswordDocument = gql`
-    mutation ResetPassword($newPassword: String!, $token: String!) {
-  resetPassword(newPassword: $newPassword, token: $token)
+    mutation ResetPassword($newPassword: String!, $token: String!, $recaptchaToken: String!) {
+  resetPassword(
+    newPassword: $newPassword
+    token: $token
+    recaptchaToken: $recaptchaToken
+  )
 }
     `;
 export type ResetPasswordMutationFn = Apollo.MutationFunction<ResetPasswordMutation, ResetPasswordMutationVariables>;
@@ -794,6 +803,7 @@ export type ResetPasswordMutationFn = Apollo.MutationFunction<ResetPasswordMutat
  *   variables: {
  *      newPassword: // value for 'newPassword'
  *      token: // value for 'token'
+ *      recaptchaToken: // value for 'recaptchaToken'
  *   },
  * });
  */

@@ -13,6 +13,7 @@ import { snackbarState } from '../../src/recoil/state';
 import { theme } from '../../styles/styles';
 import NextLink from 'next/link';
 import { withApolloAuth } from '../../src/apollo/auth';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const useStyles = makeStyles((_: Theme) => createStyles({
     root: {
@@ -51,6 +52,8 @@ const RequestResetPassword = () => {
 
     const [ forgotPassword, { loading, error } ] = useForgotPasswordMutation();
 
+    const recaptchaRef = useRef<ReCAPTCHA>();
+
     const [ snackbar, setSnackbar ] = useRecoilState(snackbarState);
 
     useEffect(() => {
@@ -69,9 +72,12 @@ const RequestResetPassword = () => {
     }, [ error ]);
 
     const handleRequest = async ({ email }: { email: string; }) => {
+        const recaptchaToken = await recaptchaRef.current.executeAsync();
+        recaptchaRef.current.reset();
         forgotPassword({
             variables: {
-                email
+                email,
+                recaptchaToken
             }
         }).then(() => {
             setSnackbar({
@@ -115,6 +121,7 @@ const RequestResetPassword = () => {
                                     </FormHelperText> : <FormHelperText
                                         id="email-helper-text">What is your email?</FormHelperText> }
                                 </FormControl>
+                                <ReCAPTCHA sitekey={ process.env.NEXT_PUBLIC_RECAPTCHA_KEY } size='invisible' ref={ recaptchaRef } />
                                 <Button type='submit' className={ classes.submit } variant='contained' color='primary'>
                                     Request
                                 </Button>

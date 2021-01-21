@@ -15,6 +15,7 @@ import { theme } from '../../styles/styles';
 import NextLink from 'next/link';
 import { withApolloAuth } from '../../src/apollo/auth';
 import { NextPageContext } from 'next';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const useStyles = makeStyles((_: Theme) => createStyles({
     root: {
@@ -51,6 +52,8 @@ const CResetPassword = ({ token }) => {
 
     const { register, handleSubmit, errors, reset } = useForm<IResetPassword>();
 
+    const recaptchaRef = useRef<ReCAPTCHA>();
+
     const [ resetPasswordMutation, { loading, error } ] = useResetPasswordMutation();
 
     const [ snackbar, setSnackbar ] = useRecoilState(snackbarState);
@@ -72,6 +75,9 @@ const CResetPassword = ({ token }) => {
 
     const handlePasswordReset = async ({ newPassword, confirmPassword }: IResetPassword) => {
 
+        const recaptchaToken = await recaptchaRef.current.executeAsync();
+        recaptchaRef.current.reset();
+
         if (newPassword !== confirmPassword) {
             reset();
             setSnackbar({
@@ -89,7 +95,8 @@ const CResetPassword = ({ token }) => {
         resetPasswordMutation({
             variables: {
                 newPassword,
-                token
+                token,
+                recaptchaToken
             }
         }).then(() => {
             reset();
@@ -179,6 +186,7 @@ const CResetPassword = ({ token }) => {
                                     </FormHelperText> : <FormHelperText
                                         id="confirmPassword-helper-text">What don't you confirm it?</FormHelperText> }
                                 </FormControl>
+                                <ReCAPTCHA sitekey={ process.env.NEXT_PUBLIC_RECAPTCHA_KEY } size='invisible' ref={ recaptchaRef } />
                                 <Button type='submit' className={ classes.submit } variant='contained' color='primary'>
                                     Reset
                                 </Button>

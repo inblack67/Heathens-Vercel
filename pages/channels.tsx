@@ -11,7 +11,7 @@ import Alert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     channelsContainer: {
-        marginTop: '3rem'
+        marginTop: '1rem'
     },
     channelArea: {
         height: '65vh',
