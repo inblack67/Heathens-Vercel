@@ -6,6 +6,7 @@ import { WebSocketLink } from '@apollo/client/link/ws';
 import { onError } from '@apollo/client/link/error';
 import { split } from '@apollo/client';
 import { getMainDefinition } from '@apollo/client/utilities';
+import { PaginatedMessages } from "../generated/graphql";
 
 const createPrivateLink = (ctx: NextPageContext) => {
     console.log('creating private client...');
@@ -73,7 +74,28 @@ const createClient = (ctx: NextPageContext) => {
                 (typeof window === "undefined" ? (ctx && ctx.req?.headers.cookie) : undefined) ||
                 "",
         },
-        cache: new InMemoryCache(),
+        cache: new InMemoryCache({
+            typePolicies: {
+                Query: {
+                    fields: {
+                        messages: {
+                            keyArgs: [],
+                            merge (
+                                existing: PaginatedMessages | undefined,
+                                incoming: PaginatedMessages
+                            ): PaginatedMessages {
+                                console.log('existing auth = ', incoming);
+                                console.log('incoming auth = ', incoming);
+                                return {
+                                    ...incoming,
+                                    messages: [ ...(existing?.messages || []), ...incoming.messages ],
+                                };
+                            },
+                        },
+                    },
+                },
+            },
+        }),
     });
 };
 

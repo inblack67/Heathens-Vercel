@@ -21,7 +21,7 @@ export type Query = {
   getSingleChannel?: Maybe<ChannelEntity>;
   getChannelUsers?: Maybe<Array<UserEntity>>;
   hello: Scalars['String'];
-  getChannelMessages: Array<MessageEntity>;
+  getChannelMessages: PaginatedMessages;
 };
 
 
@@ -36,6 +36,8 @@ export type QueryGetChannelUsersArgs = {
 
 
 export type QueryGetChannelMessagesArgs = {
+  cursor?: Maybe<Scalars['String']>;
+  limit: Scalars['Float'];
   channelId: Scalars['Float'];
 };
 
@@ -71,6 +73,12 @@ export type MessageEntity = {
   poster: UserEntity;
   channel: ChannelEntity;
   createdAt: Scalars['String'];
+};
+
+export type PaginatedMessages = {
+  __typename?: 'PaginatedMessages';
+  messages: Array<MessageEntity>;
+  hasMore: Scalars['Boolean'];
 };
 
 export type Mutation = {
@@ -317,19 +325,25 @@ export type VerifyEmailMutation = (
 
 export type GetChannelMessagesQueryVariables = Exact<{
   channelId: Scalars['Float'];
+  limit: Scalars['Float'];
+  cursor?: Maybe<Scalars['String']>;
 }>;
 
 
 export type GetChannelMessagesQuery = (
   { __typename?: 'Query' }
-  & { getChannelMessages: Array<(
-    { __typename?: 'MessageEntity' }
-    & Pick<MessageEntity, 'content' | 'id' | 'createdAt'>
-    & { poster: (
-      { __typename?: 'UserEntity' }
-      & Pick<UserEntity, 'username' | 'id'>
-    ) }
-  )> }
+  & { getChannelMessages: (
+    { __typename?: 'PaginatedMessages' }
+    & Pick<PaginatedMessages, 'hasMore'>
+    & { messages: Array<(
+      { __typename?: 'MessageEntity' }
+      & Pick<MessageEntity, 'content' | 'id' | 'createdAt'>
+      & { poster: (
+        { __typename?: 'UserEntity' }
+        & Pick<UserEntity, 'username' | 'id'>
+      ) }
+    )> }
+  ) }
 );
 
 export type GetChannelUsersQueryVariables = Exact<{
@@ -844,15 +858,18 @@ export type VerifyEmailMutationHookResult = ReturnType<typeof useVerifyEmailMuta
 export type VerifyEmailMutationResult = Apollo.MutationResult<VerifyEmailMutation>;
 export type VerifyEmailMutationOptions = Apollo.BaseMutationOptions<VerifyEmailMutation, VerifyEmailMutationVariables>;
 export const GetChannelMessagesDocument = gql`
-    query GetChannelMessages($channelId: Float!) {
-  getChannelMessages(channelId: $channelId) {
-    content
-    id
-    poster {
-      username
+    query GetChannelMessages($channelId: Float!, $limit: Float!, $cursor: String) {
+  getChannelMessages(cursor: $cursor, limit: $limit, channelId: $channelId) {
+    messages {
+      content
       id
+      poster {
+        username
+        id
+      }
+      createdAt
     }
-    createdAt
+    hasMore
   }
 }
     `;
@@ -870,6 +887,8 @@ export const GetChannelMessagesDocument = gql`
  * const { data, loading, error } = useGetChannelMessagesQuery({
  *   variables: {
  *      channelId: // value for 'channelId'
+ *      limit: // value for 'limit'
+ *      cursor: // value for 'cursor'
  *   },
  * });
  */

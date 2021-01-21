@@ -1,5 +1,5 @@
-import { FC, useEffect, useRef } from 'react';
-import { createStyles, makeStyles, Theme, Paper, Grid, Divider, Typography, Container, Fab, FormControl, InputLabel, Input, FormHelperText, Box } from '@material-ui/core';
+import { FC, Fragment, Suspense, useEffect, useRef, useState } from 'react';
+import { createStyles, makeStyles, Theme, Paper, Grid, Divider, Typography, Container, Fab, FormControl, InputLabel, Input, FormHelperText, Box, Button } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import SendIcon from '@material-ui/icons/Send';
 import { useGetChannelMessagesQuery, usePostMessageMutation, NewMessageDocument, RemovedMessageDocument } from '../src/generated/graphql';
@@ -52,6 +52,12 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    loadMore: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: '1rem 0 1rem 0'
     }
 }));
 
@@ -69,11 +75,13 @@ const Chat: FC<ICChatBox> = ({ channelId }) => {
 
     const [ snackbar, setSnackbar ] = useRecoilState(snackbarState);
 
-    const { data, loading, subscribeToMore } = useGetChannelMessagesQuery({
+    const { data, loading, subscribeToMore, fetchMore, variables } = useGetChannelMessagesQuery({
         variables: {
-            channelId: channelId
+            channelId: channelId,
+            limit: 10,
+            cursor: null
         },
-        fetchPolicy: 'network-only'
+        fetchPolicy: 'network-only',
     });
 
     const [ postMessageMutation, { error } ] = usePostMessageMutation();
@@ -98,7 +106,10 @@ const Chat: FC<ICChatBox> = ({ channelId }) => {
                 }
                 return {
                     ...prev,
-                    getChannelMessages: [ ...prev.getChannelMessages, res.subscriptionData.data.newMessage ]
+                    getChannelMessages: {
+                        ...prev.getChannelMessages,
+                        messages: [ ...prev.getChannelMessages.messages, res.subscriptionData.data.newMessage ]
+                    }
                 };
             }
         });
@@ -116,7 +127,10 @@ const Chat: FC<ICChatBox> = ({ channelId }) => {
                 }
                 return {
                     ...prev,
-                    getChannelMessages: prev.getChannelMessages.filter(mess => mess.id !== res.subscriptionData.data.removedMessage.id)
+                    getChannelMessages: {
+                        ...prev.getChannelMessages,
+                        messages: prev.getChannelMessages.messages.filter(mess => mess.id !== res.subscriptionData.data.removedMessage.id)
+                    }
                 };
             }
         });
@@ -152,6 +166,32 @@ const Chat: FC<ICChatBox> = ({ channelId }) => {
         }).catch(err => console.error(err));
     };
 
+    const onFetchMoreMessages = () => {
+        fetchMore({
+            variables: {
+                limit: variables.limit,
+                cursor: data?.getChannelMessages.messages[ data.getChannelMessages.messages.length - 1 ].createdAt
+            }, updateQuery: (prev, res) => {
+                // console.log('prev = ', prev);
+                // console.log('res = ', res);
+                if (!res.fetchMoreResult.getChannelMessages) {
+                    return prev;
+                }
+                return {
+                    ...prev,
+                    getChannelMessages: {
+                        ...prev.getChannelMessages,
+                        messages: [ ...prev.getChannelMessages.messages, ...res.fetchMoreResult.getChannelMessages.messages ],
+                        hasMore: res.fetchMoreResult.getChannelMessages.hasMore,
+                    }
+                };
+            }
+        }).then((x) => {
+            console.log(x);
+            console.log('then res');
+        }).catch(err => console.error(err));
+    };
+
     if (loading) {
         return <Preloader />;
     }
@@ -165,9 +205,17 @@ const Chat: FC<ICChatBox> = ({ channelId }) => {
                             <Alert className={ `${ classes.noData } ${ classes.alert }` } severity='success'>
                                 Messages to this chat are end-to-end encrypted.
                             </Alert>
-                            { data && data.getChannelMessages.length > 0 ? <Messages messages={ data.getChannelMessages } /> : <div className={ classes.textCenter }>
-                                <Alert className={ `${ classes.noData } ${ classes.alert }` } severity='warning'>
-                                    No messages yet.
+                            { data && data.getChannelMessages.messages.length > 0 ? <Fragment>
+                                <Messages messages={ data.getChannelMessages.messages } />
+                                { data.getChannelMessages.hasMore ?
+                                    <div className={ classes.loadMore }>
+                                        <Button onClick={ onFetchMoreMessages } color='secondary'>
+                                            Load More Messages
+                                        </Button>
+                                    </div> : null }
+                            </Fragment> : <div className={ classes.textCenter }>
+                                    <Alert className={ `${ classes.noData } ${ classes.alert }` } severity='warning'>
+                                        No messages yet.
                             </Alert> </div> }
                         </div>
                     </Container>
