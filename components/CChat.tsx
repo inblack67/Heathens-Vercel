@@ -171,9 +171,8 @@ const Chat: FC<ICChatBox> = ({ channelId }) => {
             variables: {
                 limit: variables.limit,
                 cursor: data?.getChannelMessages.messages[ data.getChannelMessages.messages.length - 1 ].createdAt
-            }, updateQuery: (prev, res) => {
-                // console.log('prev = ', prev);
-                // console.log('res = ', res);
+            },
+            updateQuery: (prev, res) => {
                 if (!res.fetchMoreResult.getChannelMessages) {
                     return prev;
                 }
@@ -186,10 +185,7 @@ const Chat: FC<ICChatBox> = ({ channelId }) => {
                     }
                 };
             }
-        }).then((x) => {
-            console.log(x);
-            console.log('then res');
-        }).catch(err => console.error(err));
+        });
     };
 
     if (loading) {

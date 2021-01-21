@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import CChannel from '../components/CChannel';
 import Layout from '../components/Layout';
+import { withApollo } from '../src/apollo';
 import { withApolloAuth } from '../src/apollo/auth';
 import { useGetMyChannelQuery } from "../src/generated/graphql";
 import { snackbarState } from '../src/recoil/state';

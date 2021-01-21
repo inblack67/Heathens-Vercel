@@ -115,9 +115,12 @@ const CResetPassword = ({ token }) => {
         }).catch(err => console.error(err));
     };
 
+    if (loading) {
+        return <Preloader />;
+    }
+
     return (
         <Layout>
-            {loading ? <Preloader /> : null }
             <div className={ classes.root }>
                 <Container>
                     <Grid container spacing={ 2 } alignItems='center' justify='center' >

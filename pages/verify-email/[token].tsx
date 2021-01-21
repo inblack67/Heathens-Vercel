@@ -71,9 +71,12 @@ const VerifyEmail: FC<{ token: string; }> = ({ token }) => {
         }
     }, [ error ]);
 
+    if (loading) {
+        return <Preloader />;
+    }
+
     return (
         <Layout>
-            {loading ? <Preloader /> : null }
             <div className={ classes.root }>
                 <Container>
                     { data ? <div className={ classes.dflex }>

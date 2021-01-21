@@ -8,6 +8,7 @@ import Layout from "../components/Layout";
 import { useRouter } from "next/router";
 import { withApolloAuth } from "../src/apollo/auth";
 import Alert from "@material-ui/lab/Alert";
+import { withApollo } from "../src/apollo";
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     channelsContainer: {
@@ -92,9 +93,12 @@ const CChannels: FC<ICChannels> = () => {
         }).catch(err => console.error(err));
     };
 
+    if (loading) {
+        return <Preloader />;
+    }
+
     return (
         <Layout>
-            {loading ? <Preloader /> : null }
             <Container>
                 <div className={ classes.channelsContainer }>
                     <div>

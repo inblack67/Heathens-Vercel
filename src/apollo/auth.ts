@@ -75,26 +75,31 @@ const createClient = (ctx: NextPageContext) => {
                 "",
         },
         cache: new InMemoryCache({
-            typePolicies: {
-                Query: {
-                    fields: {
-                        messages: {
-                            keyArgs: [],
-                            merge (
-                                existing: PaginatedMessages | undefined,
-                                incoming: PaginatedMessages
-                            ): PaginatedMessages {
-                                console.log('existing auth = ', incoming);
-                                console.log('incoming auth = ', incoming);
-                                return {
-                                    ...incoming,
-                                    messages: [ ...(existing?.messages || []), ...incoming.messages ],
-                                };
-                            },
-                        },
-                    },
-                },
-            },
+            // typePolicies: {
+            // PaginatedMessages: {
+            //     fields: {
+            //         messages: {
+            //             keyArgs: [],
+            //             merge (
+            //                 existing = [],
+            //                 incoming
+            //             ) {
+            //                 console.log('existing auth = ', existing);
+            //                 console.log('incoming auth = ', incoming);
+            //                 return [ ...existing, ...incoming ];
+            //             },
+            //         },
+            //         hasMore: {
+            //             keyArgs: [],
+            //             merge (existing = false, incoming) {
+            //                 console.log('existing hasmore = ', existing);
+            //                 console.log('incoming hasmore = ', incoming);
+            //                 return incoming;
+            //             }
+            //         }
+            //     },
+            // },
+            // },
         }),
     });
 };
