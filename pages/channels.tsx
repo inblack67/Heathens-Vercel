@@ -134,4 +134,4 @@ const CChannels: FC<ICChannels> = () => {
     );
 };
 
-export default withApolloAuth({ ssr: false })(CChannels);
+export default withApolloAuth({ ssr: true })(CChannels);

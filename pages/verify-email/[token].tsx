@@ -1,7 +1,6 @@
 import { Button, createStyles, makeStyles, Theme } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import { Container } from "next/app";
-import { useRouter } from "next/router";
 import Layout from "../../components/Layout";
 import Preloader from "../../components/Preloader";
 import { useVerifyEmailMutation } from '../../src/generated/graphql';
@@ -9,7 +8,7 @@ import NextLink from 'next/link';
 import { useRecoilState } from "recoil";
 import { snackbarState } from "../../src/recoil/state";
 import { withApolloAuth } from "../../src/apollo/auth";
-import { FC, useEffect } from "react";
+import { FC, Fragment, useEffect } from "react";
 import { NextPageContext } from "next";
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
@@ -27,6 +26,13 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     },
     yverticalMargin: {
         margin: '1rem 0 1rem 0'
+    },
+    verifyPreloader: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        height: '40vh'
     }
 }));
 
@@ -71,33 +77,33 @@ const VerifyEmail: FC<{ token: string; }> = ({ token }) => {
         }
     }, [ error ]);
 
-    if (loading) {
-        return <Preloader />;
-    }
-
     return (
         <Layout>
             <div className={ classes.root }>
                 <Container>
-                    { data ? <div className={ classes.dflex }>
-                        <Alert severity='success'>
-                            Your Email has been successfully verified.
+                    { loading ? <div className={ classes.verifyPreloader }>
+                        <Preloader />
+                    </div> : <Fragment>
+                            { data && data.verifyEmail ? <div className={ classes.dflex }>
+                                <Alert severity='success'>
+                                    Your Email has been successfully verified.
                             </Alert>
-                        <NextLink href='/login' passHref>
-                            <Button className={ classes.yverticalMargin } variant='contained' color='primary'>
-                                Login
+                                <NextLink href='/login' passHref>
+                                    <Button className={ classes.yverticalMargin } variant='contained' color='primary'>
+                                        Login
                         </Button>
-                        </NextLink>
-                    </div> : <div className={ classes.dflex }>
-                            <Alert severity='error'>
-                                Something Went Wrong.
+                                </NextLink>
+                            </div> : <div className={ classes.dflex }>
+                                    <Alert severity='error'>
+                                        Something Went Wrong.
                             </Alert>
-                            <NextLink href='/' passHref>
-                                <Button className={ classes.yverticalMargin } variant='contained' color='primary'>
-                                    Back Home
+                                    <NextLink href='/' passHref>
+                                        <Button className={ classes.yverticalMargin } variant='contained' color='primary'>
+                                            Back Home
                                     </Button>
-                            </NextLink>
-                        </div> }
+                                    </NextLink>
+                                </div> }
+                        </Fragment> }
                 </Container>
             </div>
         </Layout>

@@ -43,6 +43,13 @@ const useStyles = makeStyles((_: Theme) => createStyles({
     },
     reset: {
         marginTop: '1rem'
+    },
+    resetPreloader: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        height: '20vh'
     }
 }));
 
@@ -114,10 +121,6 @@ const CResetPassword = ({ token }) => {
 
         }).catch(err => console.error(err));
     };
-
-    if (loading) {
-        return <Preloader />;
-    }
 
     return (
         <Layout>
@@ -196,6 +199,9 @@ const CResetPassword = ({ token }) => {
                             </form>
                         </Grid>
                     </Grid>
+                    { loading ? <div className={ classes.resetPreloader }>
+                        <Preloader />
+                    </div> : null }
                 </Container>
             </div>
         </Layout>

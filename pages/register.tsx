@@ -6,8 +6,6 @@ import { useForm } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
 import Layout from '../components/Layout';
 import Preloader from '../components/Preloader';
-import { withApollo } from '../src/apollo';
-import { AUTH_HOMEPAGE } from '../src/constants';
 import { useRegisterMutation } from '../src/generated/graphql';
 import { IRegister } from '../src/interfaces';
 import { snackbarState } from '../src/recoil/state';
@@ -32,6 +30,13 @@ const useStyles = makeStyles((_: Theme) => createStyles({
     },
     submit: {
         marginTop: theme.spacing(2)
+    },
+    registerPreloader: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        height: '10vh'
     }
 }));
 
@@ -84,10 +89,6 @@ const CRegister = () => {
             });
         }).catch(err => console.error(err));
     };
-
-    if (loading) {
-        return <Preloader />;
-    }
 
     return (
         <Layout>
@@ -182,6 +183,9 @@ const CRegister = () => {
                             </form>
                         </Grid>
                     </Grid>
+                    { loading ? <div className={ classes.registerPreloader }>
+                        <Preloader />
+                    </div> : null }
                 </Container>
             </div>
         </Layout>

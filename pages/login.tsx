@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
 import Layout from '../components/Layout';
 import Preloader from '../components/Preloader';
-import { withApollo } from '../src/apollo';
 import { AUTH_HOMEPAGE } from '../src/constants';
 import { useLoginMutation } from '../src/generated/graphql';
 import { ILogin } from '../src/interfaces';
@@ -42,6 +41,13 @@ const useStyles = makeStyles((_: Theme) => createStyles({
     },
     reset: {
         marginTop: '1rem'
+    },
+    loginPreloader: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        height: '20vh'
     }
 }));
 
@@ -100,10 +106,6 @@ const CLogin = () => {
         }).catch(err => console.error(err));
     };
 
-    if (loading) {
-        return <Preloader />;
-    }
-
     return (
         <Layout>
             <div className={ classes.root }>
@@ -148,6 +150,9 @@ const CLogin = () => {
                             </form>
                         </Grid>
                     </Grid>
+                    { loading ? <div className={ classes.loginPreloader }>
+                        <Preloader />
+                    </div> : null }
                 </Container>
             </div>
         </Layout>

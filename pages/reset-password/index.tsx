@@ -6,12 +6,9 @@ import { useForm } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
 import Layout from '../../components/Layout';
 import Preloader from '../../components/Preloader';
-import { withApollo } from '../../src/apollo';
-import { AUTH_HOMEPAGE } from '../../src/constants';
 import { useForgotPasswordMutation } from '../../src/generated/graphql';
 import { snackbarState } from '../../src/recoil/state';
 import { theme } from '../../styles/styles';
-import NextLink from 'next/link';
 import { withApolloAuth } from '../../src/apollo/auth';
 import ReCAPTCHA from 'react-google-recaptcha';
 
@@ -41,6 +38,13 @@ const useStyles = makeStyles((_: Theme) => createStyles({
     },
     reset: {
         marginTop: '1rem'
+    },
+    requestPreloader: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        height: '20vh'
     }
 }));
 
@@ -92,10 +96,6 @@ const RequestResetPassword = () => {
         }).catch(err => console.error(err));
     };
 
-    if (loading) {
-        return <Preloader />;
-    }
-
     return (
         <Layout>
             <div className={ classes.root }>
@@ -131,6 +131,9 @@ const RequestResetPassword = () => {
                             </form>
                         </Grid>
                     </Grid>
+                    { loading ? <div className={ classes.requestPreloader }>
+                        <Preloader />
+                    </div> : null }
                 </Container>
             </div>
         </Layout>

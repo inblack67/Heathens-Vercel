@@ -42,4 +42,4 @@ const Dashboard = () => {
 };
 
 
-export default withApolloAuth({ ssr: false })(Dashboard);
+export default withApolloAuth({ ssr: true })(Dashboard);
