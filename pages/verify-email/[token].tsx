@@ -93,16 +93,7 @@ const VerifyEmail: FC<{ token: string; }> = ({ token }) => {
                                         Login
                         </Button>
                                 </NextLink>
-                            </div> : <div className={ classes.dflex }>
-                                    <Alert severity='error'>
-                                        Something Went Wrong.
-                            </Alert>
-                                    <NextLink href='/' passHref>
-                                        <Button className={ classes.yverticalMargin } variant='contained' color='primary'>
-                                            Back Home
-                                    </Button>
-                                    </NextLink>
-                                </div> }
+                            </div> : null }
                         </Fragment> }
                 </Container>
             </div>
