@@ -221,7 +221,7 @@ const Chat: FC<ICChatBox> = ({ channelId }) => {
                             <Grid item xs={ 11 }>
                                 <FormControl fullWidth error={ errors.content ? true : false }>
                                     <InputLabel htmlFor="content">Type Some Markdown Already</InputLabel>
-                                    <Input multiline id="content" name='content' inputRef={ register({
+                                    <Input multiline rowsMax={ 3 } id="content" name='content' inputRef={ register({
                                         required: 'What\'s your hurry?',
                                     }) } />
                                     { errors.content ? <FormHelperText

@@ -28,7 +28,7 @@
     "react-hook-form": "^6.13.0",
     "recoil": "^0.1.2",
     "subscriptions-transport-ws": "^0.9.18",
-    "use-syntaxer": "^0.1.2"
+    "use-syntaxer": "^1.0.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "1.19.4",
