@@ -70,11 +70,11 @@ const CChannel: FC<ICChannel> = ({ channel }) => {
     return (
         <div>
             {channel ? <Grid container spacing={ 8 }>
-                <Grid item xs={ 12 } md={ 6 }>
-                    <CChat channelId={ channel.id } />
-                </Grid>
                 <Grid item xs={ 12 } md={ 6 } >
                     <CSingleChannel channel={ channel } />
+                </Grid>
+                <Grid item xs={ 12 } md={ 6 }>
+                    <CChat channelId={ channel.id } />
                 </Grid>
             </Grid> : <Preloader /> }
         </div>
