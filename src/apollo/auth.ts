@@ -6,7 +6,7 @@ import { WebSocketLink } from '@apollo/client/link/ws';
 import { onError } from '@apollo/client/link/error';
 import { split } from '@apollo/client';
 import { getMainDefinition } from '@apollo/client/utilities';
-import { PaginatedMessages } from "../generated/graphql";
+// import { PaginatedMessages } from "../generated/graphql";
 
 const createPrivateLink = (ctx: NextPageContext) => {
     console.log('creating private client...');

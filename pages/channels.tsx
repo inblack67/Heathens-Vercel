@@ -8,7 +8,6 @@ import Layout from "../components/Layout";
 import { useRouter } from "next/router";
 import { withApolloAuth } from "../src/apollo/auth";
 import Alert from "@material-ui/lab/Alert";
-import { withApollo } from "../src/apollo";
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     channelsContainer: {

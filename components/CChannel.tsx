@@ -1,4 +1,4 @@
-import { Button, createStyles, Grid, makeStyles, Paper, Theme, Typography } from "@material-ui/core";
+import { createStyles, Grid, makeStyles, Theme } from "@material-ui/core";
 import { useRouter } from "next/router";
 import { FC } from "react";
 import { useRecoilState } from "recoil";
@@ -70,11 +70,11 @@ const CChannel: FC<ICChannel> = ({ channel }) => {
     return (
         <div>
             {channel ? <Grid container spacing={ 8 }>
-                <Grid item xs={ 12 } md={ 6 } >
-                    <CSingleChannel channel={ channel } />
-                </Grid>
                 <Grid item xs={ 12 } md={ 6 }>
                     <CChat channelId={ channel.id } />
+                </Grid>
+                <Grid item xs={ 12 } md={ 6 } >
+                    <CSingleChannel channel={ channel } />
                 </Grid>
             </Grid> : <Preloader /> }
         </div>
@@ -82,20 +82,3 @@ const CChannel: FC<ICChannel> = ({ channel }) => {
 };
 
 export default CChannel;
-
-
-/*
- <Typography variant='h5' color='secondary'>
-                                            { channel.name }
-                                        </Typography>
-                                        <Typography variant='h6'>
-                                            { channel.desc }
-                                        </Typography>
-                                        <Button onClick={ fireLeaveChannel } className={ classes.verticalMargin } variant='contained' color='secondary'>Leave Channel</Button>
-                                        <Typography variant='h6'>
-                                            Active Devs
-                                     </Typography>
-                                        <div>
-                                            <ChannelUsers channelId={ channel.id } />
-                                        </div>
-*/

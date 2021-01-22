@@ -5,7 +5,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import GithubIcon from '@material-ui/icons/GitHub';
 import { Grid, Typography, Button, IconButton, Toolbar, AppBar, Drawer, makeStyles, createStyles, Theme, Box } from '@material-ui/core';
 import { useGetMeQuery, useLogoutMutation } from '../src/generated/graphql';
-import { AUTH_HOMEPAGE, UNAUTH_HOMEPAGE } from '../src/constants';
 import { useRouter } from 'next/router';
 import { routes } from '../src/routes';
 import { useRecoilState } from 'recoil';

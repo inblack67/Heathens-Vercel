@@ -1,5 +1,5 @@
-import { FC, Fragment, Suspense, useEffect, useRef, useState } from 'react';
-import { createStyles, makeStyles, Theme, Paper, Grid, Divider, Typography, Container, Fab, FormControl, InputLabel, Input, FormHelperText, Box, Button } from '@material-ui/core';
+import { FC, Fragment, useEffect, useRef } from 'react';
+import { createStyles, makeStyles, Theme, Paper, Grid, Divider, Container, Fab, FormControl, InputLabel, Input, FormHelperText, Button } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import SendIcon from '@material-ui/icons/Send';
 import { useGetChannelMessagesQuery, usePostMessageMutation, NewMessageDocument, RemovedMessageDocument } from '../src/generated/graphql';

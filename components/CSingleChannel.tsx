@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { createStyles, makeStyles, Theme, Paper, Grid, Divider, Typography, Container, Button } from '@material-ui/core';
+import { createStyles, makeStyles, Theme, Paper, Grid, Typography, Container, Button } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import ChannelUsers from './ChannelUsers';
 import { useRouter } from "next/router";
